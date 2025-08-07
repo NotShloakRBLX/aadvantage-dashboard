@@ -36,10 +36,7 @@
       text-align: center;
       color: #fff;
     }
-    .header-label {
-      position: absolute; top: 20px; left: 20px;
-      font-size: 0.9rem; opacity: 0.8;
-    }
+    /* header-label removed */
     .main-title {
       font-size: 3rem; font-weight: 500;
       color: #4285F4; margin-bottom: 10px;
@@ -58,14 +55,12 @@
       border: 1px solid #ddd; border-radius: 6px;
       background: #fafafa; padding: 20px; margin-bottom: 30px;
     }
-    .details-box p {
-      margin-bottom: 12px; line-height: 1.5;
-    }
+    .details-box p { margin-bottom: 12px; line-height: 1.5; }
     .details-box p:last-child { margin-bottom: 0; }
 
     /* ===== Highlight Classes ===== */
     .highlight-credit { color: #ff5e5e; font-weight: bold; }
-    .highlight-usage { color: #1e8e3e; font-weight: bold; }
+    .highlight-usage  { color: #1e8e3e; font-weight: bold; }
 
     /* ===== Buttons ===== */
     .btn {
@@ -115,7 +110,7 @@
     .modal h3 { margin-bottom: 20px; }
 
     /* ===== Transactions Colors & Bold ===== */
-    .highlight-debit  { color: #5196ff; font-weight: bold; }
+    .highlight-debit   { color: #5196ff; font-weight: bold; }
     .transactions-list {
       list-style: none; margin-top: 16px; padding: 0;
       max-height: 300px; overflow-y: auto;
@@ -126,11 +121,8 @@
     .transactions-list .date-header {
       font-weight: bold; margin-bottom: 6px;
     }
-
     .statement-header {
-      margin: 24px 0 8px;
-      font-style: italic;
-      color: #555;
+      margin: 24px 0 8px; font-style: italic; color: #555;
     }
 
     /* ==== MOBILE OVERRIDES ==== */
@@ -143,7 +135,6 @@
       #login-btn { font-size: 1rem !important; padding: 10px !important; }
 
       .header { padding: 40px 10px 60px !important; }
-      .header-label { top: 10px !important; left: 10px !important; }
       .main-title { font-size: 2rem !important; }
 
       .content { margin: 10px auto 20px !important; padding: 0 10px !important; }
@@ -158,14 +149,16 @@
 <body>
 
   <!-- LOGIN OVERLAY -->
-  <div id="login-screen" class="fade visible" style="position:absolute;top:0;left:0;
-      width:100%;height:100%;display:flex;align-items:center;justify-content:center;
-      background:linear-gradient(135deg,#2C3E50 0%,#4CA1AF 100%);color:#fff;">
-    <div id="login-box" style="background:rgba(255,255,255,0.1);padding:40px;border-radius:12px;
-         width:90%;max-width:360px;text-align:center;box-shadow:0 8px 24px rgba(0,0,0,0.3);">
-      <h2 style="margin-bottom:24px;font-weight:300;font-size:1.8rem;">
-        Login
-      </h2>
+  <div id="login-screen" class="fade visible"
+       style="position:absolute;top:0;left:0;width:100%;height:100%;
+              display:flex;align-items:center;justify-content:center;
+              background:linear-gradient(135deg,#2C3E50 0%,#4CA1AF 100%);
+              color:#fff;">
+    <div id="login-box"
+         style="background:rgba(255,255,255,0.1);padding:40px;border-radius:12px;
+                width:90%;max-width:360px;text-align:center;
+                box-shadow:0 8px 24px rgba(0,0,0,0.3);">
+      <h2 style="margin-bottom:24px;font-weight:300;font-size:1.8rem;">Login</h2>
       <div id="login-error"
            style="height:1.2em;margin-bottom:12px;color:#ff5e5e;opacity:0;
                   transition:opacity 0.3s;font-size:0.9rem;">
@@ -210,8 +203,7 @@
   <div id="dashboard" class="hidden fade">
     <div id="card" class="page active">
       <div class="header">
-        <div class="header-label">AAdvantage Platinum Select</div>
-        <div class="main-title">AAdvantage Platinum Select</div>
+        <div class="main-title"><strong>AAdvantage Platinum Select</strong></div>
       </div>
       <div class="content">
         <div class="balance-line">
@@ -221,7 +213,7 @@
           <p><strong>Available balance:</strong> $325.00</p>
           <p><strong>Current balance:</strong> $0.00</p>
           <p><strong>Total credit limit:</strong> $325.00</p>
-          <p><strong>Credit used:</strong> <span class="highlight-usage"> 0%</span></p>
+          <p><strong>Credit used:</strong> <span class="highlight-usage">0%</span></p>
           <p><strong>Remaining statement balance:</strong> $0.00</p>
           <p><strong>Next payment date:</strong> 08/07/2025</p>
           <p><strong>Statement closing date:</strong> 08/08/2025</p>
@@ -246,7 +238,7 @@
         <div class="date-header">Pending (0)</div>
         No pending transactions
       </li>
-      <!-- ... rest of your list ... -->
+      <!-- add more items here -->
     </ul>
   </div>
 
@@ -314,5 +306,6 @@
       });
     });
   </script>
+
 </body>
 </html>
