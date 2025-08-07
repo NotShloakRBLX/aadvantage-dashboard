@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>AAdvantage Platinum Select</title>
   <style>
     /* ===== Reset & Base ===== */
@@ -10,9 +9,17 @@
     html, body { height: 100%; overflow: hidden; font-family: "Segoe UI", Roboto, sans-serif; color: #333; }
 
     /* — Fade & Visibility Utilities — */
-    .fade { transition: opacity 0.4s ease; }
-    .hidden { opacity: 0; pointer-events: none; }
-    .visible { opacity: 1; pointer-events: auto; }
+    .fade {
+      transition: opacity 0.4s ease;
+    }
+    .hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     /* ← Ensure login overlay is always on top → */
     #login-screen { z-index: 9999; }
@@ -26,7 +33,9 @@
       transition: opacity 0.4s ease;
       overflow-y: auto;
     }
-    .page.active { opacity: 1; pointer-events: auto; }
+    .page.active {
+      opacity: 1; pointer-events: auto;
+    }
 
     /* ===== Hero Header ===== */
     .header {
@@ -64,8 +73,14 @@
     .details-box p:last-child { margin-bottom: 0; }
 
     /* ===== Highlight Classes ===== */
-    .highlight-credit { color: #ff5e5e; font-weight: bold; }
-    .highlight-usage { color: #1e8e3e; font-weight: bold; }
+    .highlight-credit {
+      color: #ff5e5e;
+      font-weight: bold;
+    }
+    .highlight-usage {
+      color: #1e8e3e;
+      font-weight: bold;
+    }
 
     /* ===== Buttons ===== */
     .btn {
@@ -91,7 +106,9 @@
       opacity: 0; pointer-events: none;
       transition: opacity 0.3s ease;
     }
-    .overlay.visible { opacity: 1; pointer-events: auto; }
+    .overlay.visible {
+      opacity: 1; pointer-events: auto;
+    }
 
     /* ===== Modal & Transitions ===== */
     .modal {
@@ -133,26 +150,6 @@
       color: #555;
     }
 
-    /* ==== MOBILE OVERRIDES ==== */
-    @media only screen and (max-width: 480px) {
-      html, body { height: auto !important; overflow-y: auto !important; }
-      .page, #login-screen { height: auto !important; }
-      #login-box { padding: 20px !important; }
-      #login-box h2 { font-size: 1.5rem !important; }
-      input { font-size: 0.9rem !important; }
-      #login-btn { font-size: 1rem !important; padding: 10px !important; }
-
-      .header { padding: 40px 10px 60px !important; }
-      .header-label { top: 10px !important; left: 10px !important; }
-      .main-title { font-size: 2rem !important; }
-
-      .content { margin: 10px auto 20px !important; padding: 0 10px !important; }
-      .balance-line { font-size: 1.5rem !important; }
-      .details-box { padding: 16px !important; }
-
-      .btn { font-size: 1rem !important; padding: 12px !important; }
-      .modal { width: 90% !important; max-height: 80vh !important; overflow-y: auto !important; }
-    }
   </style>
 </head>
 <body>
@@ -182,7 +179,8 @@
         <input id="username" type="text" placeholder="Username"
                style="width:100%;padding:12px 12px 12px 44px;border:none;
                       border-radius:6px;background:rgba(255,255,255,0.2);
-                      color:#fff;font-size:1rem;" />
+                      color:#fff;font-size:1rem;"
+        />
       </div>
       <div style="position:relative;margin-bottom:20px;">
         <!-- lock icon SVG -->
@@ -195,7 +193,8 @@
         <input id="password" type="password" placeholder="Password"
                style="width:100%;padding:12px 12px 12px 44px;border:none;
                       border-radius:6px;background:rgba(255,255,255,0.2);
-                      color:#fff;font-size:1rem;" />
+                      color:#fff;font-size:1rem;"
+        />
       </div>
       <button id="login-btn"
               style="width:100%;padding:12px;background:#1e8e3e;border:none;
@@ -209,7 +208,10 @@
   <!-- === AAdvantage Platinum PAGE === -->
   <div id="dashboard" class="hidden fade">
     <div id="card" class="page active">
-        <div class="main-title"><strong>AAdvantage Platinum Select</strong></div>
+      <div class="header">
+        <div class="header-label">AAdvantage Platinum Select</div>
+        <div class="main-title">AAdvantage Platinum Select</div>
+      </div>
       <div class="content">
         <div class="balance-line">
           <strong>Current Balance:</strong> <span class="highlight-debit">$0.00</span>
@@ -230,6 +232,7 @@
       </div>
     </div>
   </div>
+  <!-- /#dashboard -->
 
   <!-- === OVERLAY === -->
   <div id="overlay" class="overlay"></div>
@@ -415,38 +418,42 @@
   </div>
 
   <script>
-    // Transactions modal
     const overlay   = document.getElementById('overlay'),
           transModal = document.getElementById('trans-modal'),
           payModal   = document.getElementById('pay-modal');
 
-    document.getElementById('show-trans').onclick = () => {
+    // Open Recent Transactions
+    document.getElementById('show-trans').addEventListener('click', () => {
       overlay.classList.add('visible');
       transModal.classList.add('visible');
-    };
-    document.getElementById('close-trans').onclick = () => {
+    });
+    // Close Recent Transactions
+    document.getElementById('close-trans').addEventListener('click', () => {
       transModal.classList.remove('visible');
       overlay.classList.remove('visible');
-    };
+    });
 
-    document.getElementById('pay-card').onclick = () => {
+    // Open Pay Card
+    document.getElementById('pay-card').addEventListener('click', () => {
       overlay.classList.add('visible');
       payModal.classList.add('visible');
-    };
-    document.getElementById('close-pay').onclick = () => {
+    });
+    // Close Pay Card
+    document.getElementById('close-pay').addEventListener('click', () => {
       payModal.classList.remove('visible');
       overlay.classList.remove('visible');
-    };
+    });
+  </script>
 
-    // Login logic
-    const loginScreen = document.getElementById('login-screen'),
-          dashboard   = document.getElementById('dashboard'),
-          errMsg      = document.getElementById('login-error'),
-          btn         = document.getElementById('login-btn');
+  <script>
+    const loginScreen = document.getElementById('login-screen');
+    const dashboard   = document.getElementById('dashboard');
+    const errMsg      = document.getElementById('login-error');
+    const btn         = document.getElementById('login-btn');
 
     btn.addEventListener('click', () => {
-      const u = document.getElementById('username').value.trim(),
-            p = document.getElementById('password').value;
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
       if (u === 'shloak' && p === 'Sac') {
         loginScreen.classList.remove('visible');
         loginScreen.classList.add('hidden');
@@ -460,13 +467,15 @@
       }
     });
 
-    // Allow "Enter" to submit
+    // allow Enter key
     ['username','password'].forEach(id => {
-      document.getElementById(id).addEventListener('keydown', e => {
-        if (e.key === 'Enter') btn.click();
-      });
+      document.getElementById(id)
+        .addEventListener('keydown', e => {
+          if (e.key === 'Enter') btn.click();
+        });
     });
   </script>
+
 </body>
 </html>
 
