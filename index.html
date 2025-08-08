@@ -1,486 +1,690 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
   <title>AAdvantage Platinum Select</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    /* ===== Reset & Base ===== */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      height: 100%;
-      overflow: hidden;
-      font-family: "Segoe UI", Roboto, sans-serif;
-      color: #333;
+    /* =========================
+       2030 NEON–GLASS DASHBOARD
+       ========================= */
+
+    :root{
+      --bg:#0a0a10;
+      --panel:#0e0f17;
+      --panel-2:#0b0c14;
+      --text:#e9e8f7;
+      --muted:#a5a3c9;
+      --grid:rgba(140,140,200,.06);
+
+      --violet:#8b5cf6;
+      --violet-2:#7c3aed;
+      --pink:#ec4899;
+      --sky:#60a5fa;
+      --mint:#34d399;
+
+      --glow-violet: 0 10px 30px rgba(139,92,246,.35);
+      --glow-pink:   0 10px 30px rgba(236,72,153,.35);
+      --glass: linear-gradient( to bottom right, rgba(18,18,30,.85), rgba(14,14,24,.85) ) padding-box,
+               linear-gradient(135deg, var(--violet), var(--pink)) border-box;
     }
 
-    /* — Fade & Visibility Utilities — */
-    .fade { transition: opacity 0.4s ease; }
-    .hidden { opacity: 0; pointer-events: none; }
-    .visible { opacity: 1; pointer-events: auto; }
-
-    /* ← Ensure login overlay is always on top → */
-    #login-screen { z-index: 9999; }
-
-    /* ===== Page Container & Transitions ===== */
-    .page {
-      position: absolute; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: #fff;
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.4s ease;
-      overflow-y: auto;
-    }
-    .page.active { opacity: 1; pointer-events: auto; }
-
-    /* ===== Hero Header ===== */
-    .header {
-      position: relative;
-      background: linear-gradient(135deg, #2C3E50 0%, #4CA1AF 100%);
-      padding: 80px 20px 100px;
-      text-align: center;
-      color: #fff;
-    }
-    .main-title {
-      font-size: 3rem; font-weight: 500;
-      color: #4285F4; margin-bottom: 10px;
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0; font-family: "Segoe UI", Roboto, system-ui, -apple-system, sans-serif;
+      color:var(--text); background:var(--bg); overflow:auto;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
     }
 
-    /* ===== Content ===== */
-    .content {
-      max-width: 600px; margin: 20px auto 40px; padding: 0 20px;
+    /* ============= Global FX background ============= */
+    .fx{
+      position:fixed; inset:0; z-index:-2; pointer-events:none;
+      background:
+        radial-gradient(900px 600px at 15% -10%, rgba(124,58,237,.22), transparent 60%),
+        radial-gradient(900px 700px at 85% 120%, rgba(236,72,153,.18), transparent 60%),
+        linear-gradient(180deg, #090911 0%, #0a0a12 60%, #090911 100%);
     }
-    .balance-line {
-      font-size: 1.8rem; margin-bottom: 16px;
+    .fx::before,
+    .fx::after{
+      content:""; position:absolute; inset:-40%;
+      background: conic-gradient(from 0turn, rgba(96,165,250,.12), rgba(124,58,237,.12), rgba(236,72,153,.12), rgba(96,165,250,.12));
+      filter: blur(60px); animation: swirl 26s linear infinite;
     }
-
-    /* ===== Details Box ===== */
-    .details-box {
-      border: 1px solid #ddd; border-radius: 6px;
-      background: #fafafa; padding: 20px; margin-bottom: 30px;
-    }
-    .details-box p { margin-bottom: 12px; line-height: 1.5; }
-    .details-box p:last-child { margin-bottom: 0; }
-
-    /* ===== Highlight Classes ===== */
-    .highlight-credit { color: #ff5e5e; font-weight: bold; }
-    .highlight-usage  { color: #1e8e3e; font-weight: bold; }
-
-    /* ===== Buttons ===== */
-    .btn {
-      display: block; width: 100%;
-      font-size: 1.1rem; font-weight: 500;
-      padding: 14px 20px; border: none;
-      border-radius: 8px;
-      background: linear-gradient(90deg, #0c2a4e, #123b61);
-      color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      cursor: pointer; transition: background 0.2s, box-shadow 0.2s;
-      margin-bottom: 20px;
-    }
-    .btn:hover {
-      background: linear-gradient(90deg, #0a2340, #0f2f4d);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+    .fx::after{ animation-duration: 34s; animation-direction: reverse; opacity: .6; }
+    @keyframes swirl{ to{ transform: rotate(1turn); } }
+    /* Subtle grid */
+    .grid{
+      position:fixed; inset:0; z-index:-1; pointer-events:none;
+      background:
+        linear-gradient(transparent 79px, var(--grid) 80px),
+        linear-gradient(90deg, transparent 79px, var(--grid) 80px);
+      background-size:80px 80px;
+      mask: radial-gradient(60% 60% at 50% 50%, #000 68%, transparent 100%);
     }
 
-    /* ===== Overlay ===== */
-    .overlay {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-    .overlay.visible { opacity: 1; pointer-events: auto; }
+    /* ===== Visibility helpers ===== */
+    .fade{ transition:opacity .4s ease; }
+    .hidden{ opacity:0; pointer-events:none; }
+    .visible{ opacity:1; pointer-events:auto; }
 
-    /* ===== Modal & Transitions ===== */
-    .modal {
-      position: fixed; top: 50%; left: 50%;
-      transform: translate(-50%, -50%) scale(0.9);
-      background: #fff; border-radius: 8px;
-      width: 340px; max-width: 90%; padding: 20px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+    /* ===================== LOGIN (black + purple) ===================== */
+    #login-screen{
+      position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+      padding:24px; color:#fff; z-index:9999; /* keep on top */
     }
-    .modal.visible {
-      opacity: 1; pointer-events: auto;
-      transform: translate(-50%, -50%) scale(1);
+    .login-shell{
+      width:min(440px, 94vw); border-radius:22px; padding:3px; background:
+        linear-gradient(120deg, #7c3aed, #a855f7, #ec4899, #7c3aed);
+      box-shadow: 0 26px 80px rgba(0,0,0,.65), 0 0 120px rgba(124,58,237,.35);
     }
-    .modal .close-btn {
-      position: absolute; top: 8px; right: 8px;
-      font-size: 1.2rem; background: none; border: none;
-      cursor: pointer;
+    #login-box{
+      border-radius:20px; padding:36px 30px 28px; text-align:center; color:#e8e7ef;
+      background:#0b0b10; box-shadow: inset 0 0 0 1px rgba(255,255,255,.04);
     }
-    .modal h3 { margin-bottom: 20px; }
+    .login-title{
+      font-size: clamp(1.8rem, 3.6vw, 2.2rem); font-weight:700; letter-spacing:.3px;
+      background: linear-gradient(90deg, #c084fc, #60a5fa 45%, #f472b6);
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      margin-bottom:22px;
+    }
+    #login-error{ height:1.2em; margin-bottom:12px; color:#ff6b6b; opacity:0; transition:opacity .3s; }
+    .input-group{ position:relative; margin:14px 0; }
+    .input{
+      width:100%; padding:14px 14px 14px 50px; border-radius:14px;
+      background:#111223; border:1px solid #26263a; color:#e5e7eb; font-size:1rem;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    .input::placeholder{ color:#979bb2; }
+    .input:focus{ outline:none; border-color:var(--violet); box-shadow:0 0 0 4px rgba(139,92,246,.22), var(--glow-violet); background:#0f1020; }
+    .input-icon{ position:absolute; top:50%; left:14px; transform:translateY(-50%); width:22px; height:22px; filter: drop-shadow(0 2px 4px rgba(139,92,246,.55)); }
 
-    /* ===== Transactions Colors & Bold ===== */
-    .highlight-debit   { color: #5196ff; font-weight: bold; }
-    .transactions-list {
-      list-style: none; margin-top: 16px; padding: 0;
-      max-height: 300px; overflow-y: auto;
+    #login-btn{
+      width:100%; display:flex; align-items:center; justify-content:center; gap:10px;
+      padding:13px 16px; border-radius:14px; cursor:pointer;
+      background:#0f0f18; color:#fff; font-weight:700; border:1px solid #2a2b36;
+      transition: box-shadow .2s, border-color .2s, transform .05s, filter .2s;
     }
-    .transactions-list li {
-      margin-bottom: 12px; line-height: 1.4;
+    #login-btn:hover, #login-btn:focus{ border-color:var(--violet); box-shadow:0 0 0 4px rgba(139,92,246,.18), var(--glow-violet); outline:none; filter:saturate(1.08); }
+    #login-btn:active{ transform:translateY(1px); }
+    .btn-icon{ width:20px; height:20px; filter: drop-shadow(0 2px 4px rgba(139,92,246,.45)); }
+
+    /* ===================== DASHBOARD ===================== */
+    .page{ position:absolute; inset:0; opacity:0; pointer-events:none; overflow:auto; }
+    .page.active{ opacity:1; pointer-events:auto; }
+
+    .topbar{
+      position:sticky; top:0; z-index:5; padding:14px 20px; backdrop-filter: blur(10px);
+      background: linear-gradient( to right, rgba(12,12,22,.72), rgba(11,11,20,.58) );
+      border-bottom:1px solid rgba(255,255,255,.06);
+      display:flex; align-items:center; justify-content:space-between;
     }
-    .transactions-list .date-header {
-      font-weight: bold; margin-bottom: 6px;
+    .brand{
+      font-weight:800; letter-spacing:.4px;
+      background: linear-gradient(90deg, var(--sky), var(--violet), var(--pink));
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+      font-size: clamp(1.2rem, 2.2vw, 1.5rem);
     }
-    .statement-header {
-      margin: 24px 0 8px; font-style: italic; color: #555;
+    .top-actions{ display:flex; gap:10px; }
+    .chip{
+      padding:8px 12px; border-radius:999px; font-size:.9rem; color:#dfe3ff;
+      background: linear-gradient(120deg, #121225, #0e0f18); border:1px solid rgba(255,255,255,.08);
     }
 
-    /* ==== MOBILE OVERRIDES ==== */
-    @media only screen and (max-width: 480px) {
-      /* allow page & overlay to scroll */
-      html, body { height: auto !important; overflow-y: auto !important; }
-      .page, #login-screen { height: auto !important; }
+    .container{ max-width:1200px; margin:28px auto 56px; padding:0 20px; }
 
-      /* make login overlay scrollable */
-      #login-screen {
-        display: block !important;
-        overflow-y: auto !important;
-        padding: 20px;
-      }
-      #login-box {
-        margin: 0 auto;
-        width: 100% !important;
-        max-width: 360px;
-      }
+    .kpis{ display:grid; grid-template-columns: repeat(12, 1fr); gap:16px; margin-bottom:16px; }
+    .card{
+      grid-column: span 4; border-radius:16px; padding:18px; background: var(--glass);
+      border:2px solid transparent; color:var(--text);
+      box-shadow: 0 20px 60px rgba(0,0,0,.55), inset 0 0 0 1px rgba(255,255,255,.03);
+      backdrop-filter: blur(10px);
+      transition: transform .06s, box-shadow .25s, filter .25s;
+    }
+    .card:hover{ transform: translateY(-2px); box-shadow: 0 28px 80px rgba(124,58,237,.28); filter: saturate(1.05); }
+    .card h4{ margin-bottom:10px; font-weight:700; color:#dfe2ff; }
+    .stat{ font-size: clamp(1.4rem, 2.6vw, 2rem); font-weight:800; letter-spacing:.2px; }
+    .stat-gradient{
+      background: linear-gradient(90deg, var(--sky), var(--violet), var(--pink));
+      -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .muted{ color:var(--muted); font-size:.92rem; }
 
-      /* shrink inputs & button */
-      input { font-size: 0.9rem !important; }
-      #login-btn { font-size: 1rem !important; padding: 10px !important; }
+/* === Realistic progress ring (SVG) === */
+.ring-3d{
+  position:relative; width:92px; height:92px; display:grid; place-items:center;
+  filter: drop-shadow(0 6px 18px rgba(16,185,129,.18));
+}
+.ring-3d::before{
+  /* subtle inner glow behind the stroke */
+  content:""; position:absolute; inset:10px;
+  border-radius:50%;
+  background: radial-gradient(60% 60% at 50% 40%, rgba(52,211,153,.16), transparent 70%);
+  pointer-events:none;
+}
+.ring-svg{
+  width:100%; height:100%;
+  transform:rotate(-90deg); /* start at top */
+}
 
-      /* adjust header/content spacing */
-      .header { padding: 40px 10px 60px !important; }
-      .main-title { font-size: 2rem !important; }
-      .content { margin: 10px auto 20px !important; padding: 0 10px !important; }
-      .balance-line { font-size: 1.5rem !important; }
-      .details-box { padding: 16px !important; }
+/* track: depth + slight vignette */
+.ring-track{
+  fill:none;
+  stroke:#151b25;
+  stroke-width:12;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
+  opacity:.95;
+}
 
-      /* shrink modal/buttons */
-      .btn { font-size: 1rem !important; padding: 12px !important; }
-      .modal { width: 90% !important; max-height: 80vh !important; overflow-y: auto !important; }
+/* progress: gradient, rounded cap, glow, smooth animation */
+.ring-progress{
+  fill:none;
+  stroke:url(#ringGrad);
+  stroke-width:12;
+  stroke-linecap:round;
+  filter:url(#ringGlow);
+  stroke-dasharray: 0 100;     /* set by JS */
+  transition: stroke-dasharray .8s cubic-bezier(.22,.9,.2,1), stroke .2s;
+}
+
+/* tiny reflective bevel for realism */
+.ring-progress::after{ content:""; }
+
+/* label in the middle */
+.ring-txt{
+  position:absolute; inset:0;
+  display:grid; place-items:center;
+  font-weight:800; color:#d9ffe9;
+  text-shadow: 0 1px 0 rgba(0,0,0,.4);
+}
+
+/* add around ring-3d if you want subtle ticks */
+.ring-3d::after{
+  content:""; position:absolute; inset:2px; border-radius:50%;
+  background:
+    conic-gradient(from 0turn, rgba(255,255,255,.06) 0 2deg, transparent 2deg 6deg) 50% / 100% 100% no-repeat;
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(50% - 12px), #000 calc(50% - 11px));
+          mask: radial-gradient(farthest-side, transparent calc(50% - 12px), #000 calc(50% - 11px));
+  opacity:.35;
+}
+    
+
+    .balance-panel{ grid-column: span 8; display:flex; align-items:center; gap:18px; }
+    .actions{ display:flex; flex-wrap:wrap; gap:12px; margin-top:10px; }
+    .action-btn{
+      display:inline-flex; align-items:center; gap:10px; padding:12px 14px; border-radius:12px; cursor:pointer;
+      background: linear-gradient(#0f0f18,#0a0a14) padding-box,
+                  linear-gradient(135deg, var(--violet), var(--pink)) border-box;
+      border:1px solid transparent; color:#fff; font-weight:700; box-shadow: var(--glow-violet);
+      transition: transform .05s, box-shadow .2s, filter .2s;
+    }
+    .action-btn:hover{ box-shadow: 0 14px 34px rgba(124,58,237,.35); filter:saturate(1.1); }
+    .action-btn:active{ transform: translateY(1px); }
+    .action-btn svg{ width:20px; height:20px; }
+
+    .facts{ grid-column: span 4; }
+    .kv{ display:flex; justify-content:space-between; padding:10px 0; border-top:1px solid rgba(255,255,255,.07); }
+    .kv:first-child{ border-top:none; }
+
+    .overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.5);
+      opacity:0; pointer-events:none; transition:opacity .25s ease;
+    }
+    .overlay.visible{ opacity:1; pointer-events:auto; }
+    .modal{
+      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(.94);
+      width:min(420px, 92vw); border-radius:16px; padding:18px;
+      background: var(--glass); border:2px solid transparent; color:var(--text);
+      box-shadow: 0 24px 80px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.03);
+      backdrop-filter: blur(10px);
+      opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+    }
+    .modal.visible{ opacity:1; pointer-events:auto; transform:translate(-50%,-50%) scale(1); }
+    .modal h3{ margin:6px 0 10px; font-weight:800; }
+    .modal .close-btn{ position:absolute; top:8px; right:10px; font-size:1.3rem; background:none; border:none; color:var(--muted); cursor:pointer; }
+    .transactions-list{ list-style:none; margin:8px 0 0; padding:0; max-height:360px; overflow:auto; }
+    .transactions-list .date-header{ font-weight:700; color:#dfe2ff; margin-bottom:6px; }
+    .tx-item{
+      padding:12px; border-radius:12px; margin:10px 0; cursor:pointer;
+      background: linear-gradient(#121222,#0f1020) padding-box,
+                  linear-gradient(135deg, rgba(124,58,237,.55), rgba(236,72,153,.55)) border-box;
+      border:1px solid transparent; transition:filter .2s, transform .05s, box-shadow .2s;
+    }
+    .tx-item:hover{ filter:saturate(1.06); box-shadow: 0 10px 26px rgba(124,58,237,.28); }
+    .tx-summary{ display:flex; justify-content:space-between; gap:10px; }
+    .points{ color:var(--muted); font-size:.9rem; }
+
+    #tx-detail-modal{ padding-top:56px; }
+    .back-btn{ position:absolute; top:16px; left:16px; background:none; border:none; color:var(--muted); cursor:pointer; }
+    .detail-rows .row{ padding:8px 0; border-top:1px solid rgba(255,255,255,.08); }
+    .detail-rows .row:first-child{ border-top:none; }
+    .row-label{ color:var(--muted); font-size:.92rem; }
+
+/* ---- Transactions search bar ---- */
+.search-wrap{
+  display:flex; align-items:center; gap:10px;
+  margin:10px 0 6px; padding:10px 12px; border-radius:12px;
+  background: linear-gradient(#121222,#0f1020) padding-box,
+              linear-gradient(135deg, rgba(124,58,237,.5), rgba(236,72,153,.5)) border-box;
+  border:1px solid transparent; box-shadow: var(--glow-violet);
+}
+.search-wrap svg{ width:18px; height:18px; opacity:.8; }
+#tx-search{
+  flex:1; background:transparent; border:none; outline:none; color:var(--text);
+  font-size:.98rem; padding:4px 0;
+}
+#tx-clear{
+  background:none; border:none; color:var(--muted); cursor:pointer;
+  font-size:1.1rem; line-height:1; padding:2px 6px; border-radius:8px;
+}
+#tx-clear:hover{ color:#fff; }
+
+
+    @media (max-width: 980px){
+      .card{ grid-column: span 6; }
+      .balance-panel{ grid-column: span 12; }
+      .facts{ grid-column: span 12; }
+    }
+    @media (max-width: 640px){
+      .card{ grid-column: span 12; }
+      .actions{ gap:10px; }
+      .action-btn{ width:100%; justify-content:center; }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .fade, .modal, #login-btn, .tx-item, .card, .action-btn{ transition:none !important; }
+      .fx::before, .fx::after{ animation:none !important; }
     }
   </style>
 </head>
 <body>
+  <div class="fx"></div>
+  <div class="grid"></div>
 
-  <!-- LOGIN OVERLAY -->
-  <div id="login-screen" class="fade visible"
-       style="position:absolute;top:0;left:0;width:100%;height:100%;
-              display:flex;align-items:center;justify-content:center;
-              background:linear-gradient(135deg,#2C3E50 0%,#4CA1AF 100%);
-              color:#fff;">
-    <div id="login-box"
-         style="background:rgba(255,255,255,0.1);padding:40px;border-radius:12px;
-                width:90%;max-width:360px;text-align:center;
-                box-shadow:0 8px 24px rgba(0,0,0,0.3);">
-      <h2 style="margin-bottom:24px;font-weight:300;font-size:1.8rem;">Login</h2>
-      <div id="login-error"
-           style="height:1.2em;margin-bottom:12px;color:#ff5e5e;opacity:0;
-                  transition:opacity 0.3s;font-size:0.9rem;">
-        Invalid credentials
+  <!-- =================== LOGIN =================== -->
+  <div id="login-screen" class="fade visible">
+    <div class="login-shell">
+      <div id="login-box">
+        <h2 class="login-title">Welcome to AAdvantage<br/>Platinum Select</h2>
+
+        <div id="login-error">Invalid credentials</div>
+
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <defs><linearGradient id="gradUser" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
+            <path fill="url(#gradUser)" d="M12 13.2a5.2 5.2 0 1 0 0-10.4 5.2 5.2 0 0 0 0 10.4Z"/>
+            <path fill="url(#gradUser)" d="M4.2 20.6c0-3.4 3.9-6.2 7.8-6.2s7.8 2.8 7.8 6.2v.2c0 .7-.6 1.2-1.3 1.2H5.5c-.7 0-1.3-.5-1.3-1.2v-.2Z"/>
+          </svg>
+          <input id="username" class="input" type="text" placeholder="Username" />
+        </div>
+
+        <div class="input-group">
+          <svg class="input-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <defs><linearGradient id="gradLock" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#9333ea"/></linearGradient></defs>
+          <path fill="url(#gradLock)" d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-7a2 2 0 0 0-2-2Zm-8-2a3 3 0 1 1 6 0v2H9V7Zm4 9.7V17a1 1 0 1 0-2 0v-.3a2 2 0 1 0 2 0Z"/>
+          </svg>
+          <input id="password" class="input" type="password" placeholder="Password" />
+        </div>
+
+        <button id="login-btn">
+          <svg class="btn-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <defs><linearGradient id="gradBtn" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#c084fc"/><stop offset="100%" stop-color="#ec4899"/></linearGradient></defs>
+            <path fill="url(#gradBtn)" d="M12 3a1 1 0 0 1 1 1v5h-2V5H6v14h5v-4h2v5a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7Zm8.7 9.3-4-4-1.4 1.4 1.3 1.3H12v2h4.6l-1.3 1.3 1.4 1.4 4-4a1 1 0 0 0 0-1.4Z"/>
+          </svg>
+          Log In
+        </button>
       </div>
-      <div style="position:relative;margin-bottom:20px;">
-        <!-- user icon -->
-        <svg viewBox="0 0 24 24"
-             style="position:absolute;top:50%;left:12px;transform:translateY(-50%);
-                    width:20px;height:20px;fill:rgba(255,255,255,0.8);">
-          <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 
-                   0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
-        </svg>
-        <input id="username" type="text" placeholder="Username"
-               style="width:100%;padding:12px 12px 12px 44px;border:none;
-                      border-radius:6px;background:rgba(255,255,255,0.2);
-                      color:#fff;font-size:1rem;" />
-      </div>
-      <div style="position:relative;margin-bottom:20px;">
-        <!-- lock icon -->
-        <svg viewBox="0 0 24 24"
-             style="position:absolute;top:50%;left:12px;transform:translateY(-50%);
-                    width:20px;height:20px;fill:rgba(255,255,255,0.8);">
-          <path d="M17 8V6c0-2.8-2.2-5-5-5S7 3.2 7 6v2H5v14h14V8h-2zm-8 0V6c0-
-                   1.7 1.3-3 3-3s3 1.3 3 3v2H9z"/>
-        </svg>
-        <input id="password" type="password" placeholder="Password"
-               style="width:100%;padding:12px 12px 12px 44px;border:none;
-                      border-radius:6px;background:rgba(255,255,255,0.2);
-                      color:#fff;font-size:1rem;" />
-      </div>
-      <button id="login-btn"
-              style="width:100%;padding:12px;background:#1e8e3e;border:none;
-                     border-radius:6px;color:#fff;font-size:1.1rem;
-                     font-weight:500;cursor:pointer;transition:background 0.2s;">
-        Log In
-      </button>
     </div>
   </div>
 
-  <!-- === AAdvantage Platinum PAGE === -->
+  <!-- =================== DASHBOARD =================== -->
   <div id="dashboard" class="hidden fade">
     <div id="card" class="page active">
-      <div class="header">
-        <div class="main-title"><strong>AAdvantage Platinum Select</strong></div>
+      <div class="topbar">
+        <div class="brand">AAdvantage Platinum</div>
+        <div class="top-actions">
+          <div class="chip">Status: <strong>Active</strong></div>
+          <div class="chip">Card ••••8126</div>
+        </div>
       </div>
-      <div class="content">
-        <div class="balance-line">
-          <strong>Current Balance:</strong> <span class="highlight-debit">$0.00</span>
+
+      <div class="container">
+        <div class="kpis" style="--credit-used:0;">
+          <div class="card balance-panel">
+            <div>
+              <h4>Current Balance</h4>
+              <div class="stat stat-gradient">$0.00</div>
+              <div class="actions">
+                <button id="show-trans" class="action-btn" title="See recent activity">
+                  <svg viewBox="0 0 24 24"><path fill="#a78bfa" d="M4 4h16a1 1 0 0 1 1 1v3H3V5a1 1 0 0 1 1-1zm-1 7h18v7a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-7zm4 2v2h2v-2H7zm4 0v2h6v-2h-6z"/></svg>
+                  Recent transactions
+                </button>
+                <button id="pay-card" class="action-btn" title="Make a payment">
+                  <svg viewBox="0 0 24 24"><path fill="#ec4899" d="M3 5h18a2 2 0 0 1 2 2v2H1V7a2 2 0 0 1 2-2Zm-2 7h22v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-5Zm4 3v2h5v-2H5Z"/></svg>
+                  Pay Card
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="display:flex; align-items:center; gap:16px;">
+  <div class="ring-3d">
+    <svg class="ring-svg" viewBox="0 0 120 120" aria-hidden="true">
+      <defs>
+        <!-- gradient for the progress stroke -->
+        <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"  stop-color="#34d399"/>
+          <stop offset="100%" stop-color="#10b981"/>
+        </linearGradient>
+        <!-- soft glow -->
+        <filter id="ringGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+
+      <!-- track -->
+      <circle class="ring-track" cx="60" cy="60" r="46"/>
+
+      <!-- progress (pathLength=100 makes dasharray math easy) -->
+      <circle class="ring-progress" cx="60" cy="60" r="46" pathLength="100"/>
+    </svg>
+
+    <span class="ring-txt" id="creditPct">0%</span>
+  </div>
+
+  <div>
+    <h4>Credit Used</h4>
+    <div class="muted">Total limit: <strong>$325.00</strong></div>
+  </div>
+</div>
+
+
+          <div class="card">
+            <h4>Upcoming</h4>
+            <div class="kv"><span class="muted">Next payment date</span><strong>08/07/2025</strong></div>
+            <div class="kv"><span class="muted">Statement close</span><strong>08/08/2025</strong></div>
+            <div class="kv"><span class="muted">Minimum due</span><strong>$0.00</strong></div>
+            <div class="kv"><span class="muted">APR (as of 08/06/25)</span><strong>22.34%</strong></div>
+          </div>
+
+          <div class="card facts">
+            <h4>Account Snapshot</h4>
+            <div class="kv"><span class="muted">Available balance</span><strong>$325.00</strong></div>
+            <div class="kv"><span class="muted">Current balance</span><strong>$0.00</strong></div>
+            <div class="kv"><span class="muted">Remaining statement</span><strong>$0.00</strong></div>
+          </div>
         </div>
-        <div class="details-box">
-          <p><strong>Available balance:</strong> $325.00</p>
-          <p><strong>Current balance:</strong> $0.00</p>
-          <p><strong>Total credit limit:</strong> $325.00</p>
-          <p><strong>Credit used:</strong> <span class="highlight-usage">0%</span></p>
-          <p><strong>Remaining statement balance:</strong> $0.00</p>
-          <p><strong>Next payment date:</strong> 08/07/2025</p>
-          <p><strong>Statement closing date:</strong> 08/08/2025</p>
-          <p><strong>Minimum payment due:</strong> $0.00</p>
-          <p><strong>APR as of 08/06/25:</strong> 20.14%</p>
-        </div>
-        <button id="show-trans" class="btn">Recent transactions</button>
-        <button id="pay-card" class="btn">Pay Card</button>
       </div>
     </div>
   </div>
 
-  <!-- === OVERLAY === -->
+  <!-- ============ OVERLAY & MODALS ============ -->
   <div id="overlay" class="overlay"></div>
 
-  <!-- === Recent Transactions Modal === -->
   <div id="trans-modal" class="modal">
     <button id="close-trans" class="close-btn">×</button>
     <h3>Recent transactions</h3>
-    <ul class="transactions-list">
-      <li>
-        <div class="date-header">Pending (0)</div>
-        No pending transactions
-      </li>
-      <ul class="transactions-list">
 
-  <li>
-    <div class="date-header">Jul 27, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$7.65</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jul 26, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$78.35</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jul 17, 2025 (1)</div>
-    <div>AFFIRM.COM PAYMENTS – <span class="highlight-debit">$58.51</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jul 15, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$37.83</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jul 14, 2025 (1)</div>
-    <div>Disney Plus – <span class="highlight-debit">$21.32</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jul 10, 2025 (1)</div>
-    <div>Credit Transfer to TOTAL CHECKING (...6750) – <span class="highlight-debit">$24.01</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jul 09, 2025 (1)</div>
-    <div>ROBLOX 1.888.858.2569 – <span class="highlight-debit">$19.99</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jul 08, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$44.34</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jul 07, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$40.00</span></div>
-  </li>
+<div class="search-wrap">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path fill="#a78bfa" d="M15.5 14h-.8l-.3-.3a6 6 0 1 0-.9.9l.3.3v.8L19 20.5 20.5 19 15.5 14Zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14Z"/>
+  </svg>
+  <input id="tx-search" type="text" autocomplete="off" placeholder="Search merchant, amount, date…" />
+  <button id="tx-clear" title="Clear">×</button>
+</div>
 
-  <!-- Jun Statement -->
-  <li class="statement-header">Jun 2025 Statement:</li>
-
-  <li>
-    <div class="date-header">Jun 30, 2025 (1)</div>
-    <div>DD* DOORDASH TACOBELL – <span class="highlight-debit">$17.26</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jun 23, 2025 (1)</div>
-    <div>Affirm BNPL – <span class="highlight-debit">$27.66</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jun 20, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$10.09</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jun 19, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$122.49</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jun 17, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$38.86</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jun 14, 2025 (1)</div>
-    <div>CHASE TRVL (HND-IZO) – <span class="highlight-debit">4,273.66mi</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jun 10, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$70.06</span></div>
-  </li>
-
-  <!-- May Statement -->
-  <li class="statement-header">May 2025 Statement:</li>
-
-  <li>
-    <div class="date-header">Jun 03, 2025 (4)</div>
-    <div>APPLE.COM/BILL – <span class="highlight-debit">$21.31</span></div>
-    <div>CAROWINDS FOOD – <span class="highlight-debit">$0.25</span></div>
-    <div>CAROWINDS FOOD – <span class="highlight-debit">$8.65</span></div>
-    <div>CAROWINDS FOOD – <span class="highlight-debit">$20.56</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jun 02, 2025 (1)</div>
-    <div>DISCORD* GIFT-NITRO-MO – <span class="highlight-debit">$10.66</span></div>
-  </li>
-  <li>
-    <div class="date-header">Jun 01, 2025 (1)</div>
-    <div>CHASE TRVL (IZO-RFD) – <span class="highlight-debit">$703.92</span> – TRAVEL – <span class="highlight-debit">$7.03</span></div>
-  </li>
-  <li>
-    <div class="date-header">May 30, 2025 (1)</div>
-    <div>Pay in 4* Paypal Printify loan – <span class="highlight-debit">$12.27</span></div>
-  </li>
-  <li>
-    <div class="date-header">May 29, 2025 (2)</div>
-    <div>PTFS RESERVATIONS – <span class="highlight-debit">$14.90</span></div>
-    <div>CHASE TRVL (HND-IZO)* AMERICAN – <span class="highlight-debit">5,457.50mi</span></div>
-  </li>
-  <li>
-    <div class="date-header">May 19, 2025 (1)</div>
-    <div>CHASE TRVL (IZO-LCA)* AMERICAN – <span class="highlight-debit">$453.57</span> – TRAVEL – <span class="highlight-debit">$4.53</span></div>
-  </li>
-  <li>
-    <div class="date-header">May 18, 2025 (1)</div>
-    <div>CHASE TRVL (HND-GVK-IZO)* LUFTHANSA – <span class="highlight-debit">$2,688.93</span> – TRAVEL – <span class="highlight-debit">$26.88</span></div>
-  </li>
-  <li>
-    <div class="date-header">May 17, 2025 (2)</div>
-    <div>CHASE TRVL (RFD-TKO)* QATAR AIRWAYS – <span class="highlight-debit">5,675.00mi</span></div>
-    <div>CHASE TRVL (IZO-GRA)* AMERICAN AIRLINES – <span class="highlight-debit">$620.16</span> – TRAVEL – <span class="highlight-debit">$6.20</span></div>
-  </li>
-  <li>
-    <div class="date-header">May 12, 2025 (1)</div>
-    <div>AMAZON GROCERY AMZN.CO – <span class="highlight-debit">$21.86</span></div>
-  </li>
-  <li>
-    <div class="date-header">May 10, 2025 (1)</div>
-    <div>Printify, Inc* Paypal loan – <span class="highlight-debit">$12.28</span></div>
-  </li>
-
-  <!-- Apr Statement -->
-  <li class="statement-header">Apr 2025 Statement:</li>
-
-  <li>
-    <div class="date-header">May 07, 2025 (1)</div>
-    <div>CARD PAYMENT* 8126 – <span class="highlight-credit">-$40.00</span></div>
-  </li>
-  <li>
-    <div class="date-header">Apr 25, 2025 (2)</div>
-    <div>CHASE TRVL* AMERICAN AIRLINES (MLL→GRA) – <span class="highlight-debit">$132.13</span> – TRAVEL – <span class="highlight-debit">$1.32</span></div>
-    <div>CHASE TRVL* AMERICAN AIRLINES (TKO→IZO→MLL) – <span class="highlight-debit">$1,042.51</span> – TRAVEL – <span class="highlight-debit">$10.42</span></div>
-  </li>
-  <li>
-    <div class="date-header">Apr 24, 2025 (3)</div>
-    <div>CHASE TRVL (GRA→PHP→MLL) – <span class="highlight-debit">$344.79</span> – TRAVEL – <span class="highlight-debit">$3.44</span></div>
-    <div>CHASE TRVL (GRI→IZO→PER) – <span class="highlight-debit">$1,551.54</span> – TRAVEL – <span class="highlight-debit">$15.51</span></div>
-    <div>QATAR AIRWAYS (GRA→TKO) – <span class="highlight-debit">$927.42</span> – TRAVEL – <span class="highlight-debit">$9.27</span></div>
-  </li>
-  <li>
-    <div class="date-header">Apr 23, 2025 (1)</div>
-    <div>AMERICAN AIRLINES (TKO→GRA→IZO) – <span class="highlight-debit">$1,256.27</span> – TRAVEL – <span class="highlight-debit">$12.56</span></div>
-  </li>
-  <li>
-    <div class="date-header">Apr 16, 2025 (1)</div>
-    <div>DISCORD* 5XSERVERBOOST – <span class="highlight-debit">$29.29</span></div>
-  </li>
-  <li>
-    <div class="date-header">Apr 15, 2025 (1)</div>
-    <div>Cathay Pacific (GRA→TKO) – <span class="highlight-debit">$1,052.79</span> – TRAVEL – <span class="highlight-debit">$10.52</span></div>
-  </li>
-  <li>
-    <div class="date-header">Apr 13, 2025 (2)</div>
-    <div>Disney Plus – <span class="highlight-debit">$21.32</span></div>
-    <div>AMERICAN AIRLINES (LCA→GRA) – <span class="highlight-debit">$267.50</span> – TRAVEL – <span class="highlight-debit">$2.67</span></div>
-  </li>
-</ul>
-
-    </ul>
+    <div class="date-header" style="color:var(--muted);">Pending (0)</div>
+    <div style="margin-bottom:8px;color:var(--muted);">No pending transactions</div>
+    <ul id="tx-list" class="transactions-list"></ul>
   </div>
 
-  <!-- === Pay Card Modal === -->
-  <div id="pay-modal" class="modal" style="width: 360px;">
+  <div id="tx-detail-modal" class="modal">
+    <button class="back-btn">← Back</button>
+    <h3>Transaction Details</h3>
+    <div class="detail-header">
+      <h4 id="detail-merchant">Merchant</h4>
+      <div id="detail-amount" class="stat stat-gradient" style="font-size:1.4rem">$0.00</div>
+      <div id="detail-points" class="points">0 pts</div>
+    </div>
+    <div class="detail-rows"></div>
+  </div>
+
+  <div id="pay-modal" class="modal" style="width:min(420px,92vw);">
     <button id="close-pay" class="close-btn">×</button>
     <h3>Pay Card</h3>
-    <div class="details-box" style="margin:0;">
-      <p><strong>Current balance:</strong> <span class="highlight-debit">$0.00</span></p>
-      <p><strong>Remaining statement balance:</strong> $0.00</p>
-      <p><strong>Minimum payment due:</strong> <span class="highlight-debit">$0.00</span></p>
-    </div>
+    <div class="kv"><span class="muted">Current balance</span><strong>$0.00</strong></div>
+    <div class="kv"><span class="muted">Remaining statement balance</span><strong>$0.00</strong></div>
+    <div class="kv"><span class="muted">Minimum payment due</span><strong>$0.00</strong></div>
   </div>
 
   <script>
-    // Transactions modal
-    const overlay   = document.getElementById('overlay'),
-          transModal = document.getElementById('trans-modal'),
-          payModal   = document.getElementById('pay-modal');
+  document.addEventListener('DOMContentLoaded', () => {
+    const overlay     = document.getElementById('overlay');
+    const transModal  = document.getElementById('trans-modal');
+    const detailModal = document.getElementById('tx-detail-modal');
+    const payModal    = document.getElementById('pay-modal');
+    const loginScreen = document.getElementById('login-screen');
+    const dashboard   = document.getElementById('dashboard');
+    const btn         = document.getElementById('login-btn');
+
+    /* ========= DATA STORE ========= */
+    const transactions = [      
+      { id:'t-2025-07-27-1', date:'Jul 27, 2025', merchant:'CARD PAYMENT* 8126', amount:'-$7.65',  points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-07-26-1', date:'Jul 26, 2025', merchant:'CARD PAYMENT* 8126', amount:'-$78.35', points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-07-17-1', date:'Jul 17, 2025', merchant:'AFFIRM.COM PAYMENTS', amount:'$58.51', points:58.51,  category:'Other',                      cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-07-15-1', date:'Jul 15, 2025', merchant:'CARD PAYMENT* 8126', amount:'-$37.83', points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-07-14-1', date:'Jul 14, 2025', merchant:'Disney Plus',        amount:'$21.32',  points:42.64,  category:'Streaming',                  cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-07-10-1', date:'Jul 10, 2025', merchant:'Credit Transfer to TOTAL CHECKING (...6750)', amount:'$24.01', points:0, category:'Transfer', cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-07-09-1', date:'Jul 09, 2025', merchant:'ROBLOX 1.888.858.2569', amount:'$19.99', points:39.98, category:'Online Shopping',           cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-07-08-1', date:'Jul 08, 2025', merchant:'CARD PAYMENT* 8126', amount:'-$44.34', points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-07-07-1', date:'Jul 07, 2025', merchant:'CARD PAYMENT* 8126', amount:'-$40.00', points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+
+  // Jun 2025
+  { id:'t-2025-06-30-1', date:'Jun 30, 2025', merchant:'DD* DOORDASH TACOBELL', amount:'$17.26', points:17.26, category:'Food & Drink',              cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-23-1', date:'Jun 23, 2025', merchant:'Affirm BNPL',         amount:'$27.66',  points:27.66,  category:'Other',                      cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-20-1', date:'Jun 20, 2025', merchant:'CARD PAYMENT* 8126',  amount:'-$10.09', points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-19-1', date:'Jun 19, 2025', merchant:'CARD PAYMENT* 8126',  amount:'-$122.49',points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-17-1', date:'Jun 17, 2025', merchant:'CARD PAYMENT* 8126',  amount:'-$38.86', points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-14-1', date:'Jun 14, 2025', merchant:'CHASE TRVL (HND-IZO)', amount:'4,273.66mi', points:0,  category:'Travel (Miles)',             cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-10-1', date:'Jun 10, 2025', merchant:'CARD PAYMENT* 8126',  amount:'-$70.06', points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+
+  // Jun 03 (4)
+  { id:'t-2025-06-03-1', date:'Jun 03, 2025', merchant:'APPLE.COM/BILL',      amount:'$21.31',  points:42.62,  category:'Streaming',                  cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-03-2', date:'Jun 03, 2025', merchant:'CAROWINDS FOOD',      amount:'$0.25',   points:0.25,   category:'Other',                      cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-03-3', date:'Jun 03, 2025', merchant:'CAROWINDS FOOD',      amount:'$8.65',   points:8.65,   category:'Other',                      cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-03-4', date:'Jun 03, 2025', merchant:'CAROWINDS FOOD',      amount:'$20.56',  points:20.56,  category:'Other',                      cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-06-02-1', date:'Jun 02, 2025', merchant:'DISCORD* GIFT-NITRO-MO', amount:'$10.66', points:21.32, category:'Chatting',                 cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-06-01-1', date:'Jun 01, 2025', merchant:'CHASE TRVL (IZO - RFD)', amount:'$703.92', points:703.92, category:'Travel',                 cardEnding:'****8126', status:'Posted' },
+
+  // May 2025
+  { id:'t-2025-05-30-1', date:'May 30, 2025', merchant:'Pay in 4* Paypal Printify loan', amount:'$12.27', points:12.27, category:'Other',              cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-05-29-1', date:'May 29, 2025', merchant:'PTFS RESERVATIONS',   amount:'$14.90',  points:14.90,  category:'Other',                      cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-05-29-2', date:'May 29, 2025', merchant:'CHASE TRVL (HND - IZO)* AMERICAN', amount:'5,457.50mi', points:0, category:'Travel (Miles)', cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-05-19-1', date:'May 19, 2025', merchant:'CHASE TRVL (IZO - LCA)* AMERICAN', amount:'$453.57', points:1360.71, category:'Travel (American Airlines)', cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-05-18-1', date:'May 18, 2025', merchant:'CHASE TRVL (HND - GVK - IZO)* LUFTHANSA', amount:'$2,688.93', points:2688.93, category:'Travel', cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-05-17-1', date:'May 17, 2025', merchant:'CHASE TRVL (RFD - TKO)* QATAR AIRWAYS', amount:'5,675.00mi', points:0, category:'Travel (Miles)', cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-05-17-2', date:'May 17, 2025', merchant:'CHASE TRVL (IZO - GRA)* AMERICAN AIRLINES', amount:'$620.16', points:1860.48, category:'Travel (American Airlines)', cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-05-12-1', date:'May 12, 2025', merchant:'AMAZON GROCERY AMZN.CO', amount:'$21.86', points:43.72, category:'Online Shopping',          cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-05-10-1', date:'May 10, 2025', merchant:'Printify, Inc* Paypal loan', amount:'$12.28', points:24.56, category:'Online Shopping',       cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-05-07-1', date:'May 07, 2025', merchant:'CARD PAYMENT* 8126',  amount:'-$40.00', points:0,      category:'Payment',                    cardEnding:'****8126', status:'Posted' },
+
+  // Apr 2025
+  { id:'t-2025-04-25-1', date:'Apr 25, 2025', merchant:'CHASE TRVL* AMERICAN AIRLINES (MLL > GRA)', amount:'$132.13', points:396.39, category:'Travel (American Airlines)', cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-04-25-2', date:'Apr 25, 2025', merchant:'CHASE TRVL* AMERICAN AIRLINES (TKO > IZO > MLL)', amount:'$1,042.51', points:3127.53, category:'Travel (American Airlines)', cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-04-24-1', date:'Apr 24, 2025', merchant:'CHASE TRVL (GRA - PHP - MLL)', amount:'$344.79', points:344.79, category:'Travel',             cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-04-24-2', date:'Apr 24, 2025', merchant:'CHASE TRVL (GRI - IZO - PER)', amount:'$1,551.54', points:1551.54, category:'Travel',         cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-04-24-3', date:'Apr 24, 2025', merchant:'QATAR AIRWAYS (GRA - TKO)',     amount:'$927.42', points:1854.84, category:'Travel (Oneworld)', cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-04-23-1', date:'Apr 23, 2025', merchant:'AMERICAN AIRLINES (TKO - GRA - IZO)', amount:'$1,256.27', points:3768.81, category:'Travel (American Airlines)', cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-04-16-1', date:'Apr 16, 2025', merchant:'DISCORD* 5XSERVERBOOST', amount:'$29.29', points:58.58, category:'Chatting',                  cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-04-15-1', date:'Apr 15, 2025', merchant:'Cathay Pacific (GRA - TKO)', amount:'$1,052.79', points:2105.58, category:'Travel (Oneworld)', cardEnding:'****8126', status:'Posted' },
+
+  { id:'t-2025-04-13-1', date:'Apr 13, 2025', merchant:'Disney Plus',           amount:'$21.32',  points:42.64, category:'Streaming',                 cardEnding:'****8126', status:'Posted' },
+  { id:'t-2025-04-13-2', date:'Apr 13, 2025', merchant:'AMERICAN AIRLINES (LCA - GRA)', amount:'$267.50', points:802.50, category:'Travel (American Airlines)', cardEnding:'****8126', status:'Posted' }
+    ];
+
+    const txListEl = document.getElementById('tx-list');
+
+    function openDetail(tx) {
+      document.getElementById('detail-merchant').textContent = tx.merchant;
+      document.getElementById('detail-amount').textContent   = tx.amount;
+      document.getElementById('detail-points').textContent   = (tx.points ?? 0) + ' pts';
+
+      const rows = [
+        { label: 'Date',        value: tx.date },
+        { label: 'Category',    value: tx.category },
+        { label: 'Card Ending', value: tx.cardEnding },
+        { label: 'Status',      value: tx.status }
+      ];
+      const container = detailModal.querySelector('.detail-rows');
+      container.innerHTML = rows.map(r =>
+        `<div class="row"><div class="row-label">${r.label}</div><div>${r.value}</div></div>`
+      ).join('');
+
+      transModal.classList.remove('visible');
+      detailModal.classList.add('visible');
+      overlay.classList.add('visible');
+    }
+
+    function renderList(list = transactions) {
+  txListEl.innerHTML = '';
+  if (!list.length) {
+    txListEl.innerHTML = '<li class="muted" style="padding:12px 6px;">No matches.</li>';
+    return;
+  }
+  list.forEach(tx => {
+    const li = document.createElement('li');
+    li.className = 'tx-item';
+    li.innerHTML = `
+      <div class="date-header">${tx.date}</div>
+      <div class="tx-summary">
+        <span>${tx.merchant}</span>
+        <span class="${tx.amount.trim().startsWith('-') ? 'highlight-credit' : 'stat-gradient'}">
+          ${tx.amount}
+        </span>
+      </div>
+    `;
+    li.addEventListener('click', () => openDetail(tx));
+    txListEl.appendChild(li);
+  });
+}
+
+    renderList();
+
+    const open = (m)=>{ overlay.classList.add('visible'); m.classList.add('visible'); };
+    const close= (m)=>{ m.classList.remove('visible'); overlay.classList.remove('visible'); };
 
     document.getElementById('show-trans').onclick = () => {
-      overlay.classList.add('visible');
-      transModal.classList.add('visible');
-    };
-    document.getElementById('close-trans').onclick = () => {
-      transModal.classList.remove('visible');
-      overlay.classList.remove('visible');
-    };
+  open(transModal);
+  renderList(filterTx(searchInput.value));   // keep results in sync
+  setTimeout(() => searchInput.focus(), 50); // focus after opening
+};
+    document.getElementById('close-trans').onclick = () => close(transModal);
+    document.querySelector('#tx-detail-modal .back-btn').onclick = () => { close(detailModal); open(transModal); };
 
-    document.getElementById('pay-card').onclick = () => {
-      overlay.classList.add('visible');
-      payModal.classList.add('visible');
-    };
-    document.getElementById('close-pay').onclick = () => {
-      payModal.classList.remove('visible');
-      overlay.classList.remove('visible');
-    };
+    document.getElementById('pay-card').onclick = () => open(payModal);
+    document.getElementById('close-pay').onclick = () => close(payModal);
 
-    // Login logic
-    const loginScreen = document.getElementById('login-screen'),
-          dashboard   = document.getElementById('dashboard'),
-          errMsg      = document.getElementById('login-error'),
-          btn         = document.getElementById('login-btn');
-
-    btn.addEventListener('click', () => {
-      const u = document.getElementById('username').value.trim(),
-            p = document.getElementById('password').value;
-      if (u === 'shloak' && p === 'Sac') {
+    /* ========= Login: allow ANY non-empty credentials ========= */
+    function tryLogin(){
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value;
+      const err = document.getElementById('login-error');
+      if (u && p){
         loginScreen.classList.remove('visible');
         loginScreen.classList.add('hidden');
         setTimeout(() => {
           dashboard.classList.remove('hidden');
           dashboard.classList.add('visible');
-        }, 400);
+        }, 300);
       } else {
-        errMsg.style.opacity = '1';
-        setTimeout(() => errMsg.style.opacity = '0', 2000);
+        err.textContent = 'Enter username & password';
+        err.style.opacity = '1';
+        setTimeout(() => err.style.opacity = '0', 1800);
       }
+    }
+    btn.addEventListener('click', tryLogin);
+    ['username','password'].forEach(id=>{
+      document.getElementById(id).addEventListener('keydown', e => { if(e.key==='Enter') tryLogin(); });
     });
 
-    // Allow "Enter" to submit
-    ['username','password'].forEach(id => {
-      document.getElementById(id).addEventListener('keydown', e => {
-        if (e.key === 'Enter') btn.click();
-      });
-    });
+    /* Public helper to add transactions dynamically */
+    window.addTransaction = function addTransaction(tx, {toTop = true} = {}) {
+      (toTop ? transactions.unshift(tx) : transactions.push(tx));
+      renderList();
+    };
+
+const searchInput = document.getElementById('tx-search');
+const clearBtn    = document.getElementById('tx-clear');
+
+function escapeRegExp(s){ return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+// Prefix/word-start search: every token must match the start of some word
+function filterTx(q){
+  if(!q) return transactions;
+  const tokens = q.trim().toLowerCase().split(/\s+/).map(escapeRegExp);
+  return transactions.filter(tx => {
+    const hay = `${tx.merchant} ${tx.category} ${tx.date} ${tx.amount}`.toLowerCase();
+    return tokens.every(t => new RegExp(`(^|\\b|\\s)${t}`).test(hay));
+  });
+}
+
+// Live filter while typing
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value;
+  renderList(filterTx(q));
+  clearBtn.style.visibility = q ? 'visible' : 'hidden';
+});
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  renderList(transactions);
+  clearBtn.style.visibility = 'hidden';
+  searchInput.focus();
+});
+
+
+// === Credit Used control ===
+// elements from the SVG ring
+const ringProg = document.querySelector('.ring-progress');
+const ringText = document.getElementById('creditPct');
+
+function setCreditUsed(used, limit) {
+  const pct = Math.max(0, Math.min(100, (used / limit) * 100)); // clamp 0–100
+
+  // fill the arc
+  ringProg.style.strokeDasharray = `${pct} 100`;
+  ringText.textContent = `${Math.round(pct)}%`;
+
+  // color rules: green ≤30, yellow >30, red >60
+  let color;
+  if (pct > 60) color = '#f87171';       // red
+  else if (pct > 30) color = '#fbbf24';  // yellow
+  else color = '#34d399';                // green
+
+  ringProg.style.stroke = color;                       // set stroke color
+  ringProg.style.filter = `drop-shadow(0 6px 16px ${color}55)`; // matching glow
+}
+
+// example
+// setCreditUsed(usedDollars, totalLimitDollars);
+setCreditUsed(0, 325);
+
+
+  });
   </script>
-
 </body>
 </html>
-
