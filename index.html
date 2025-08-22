@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-<title>Sapphire Reserve</title>
+<title>AAdvantage Platinum</title>
 <style>
   :root{
     --bg:#0b0b0b;
@@ -204,7 +204,7 @@
     <!-- Card dashboard (opens by default) -->
     <section class="view" id="card">
       <div class="nav">
-        <h1>Sapphire Reserve</h1>
+        <h1>AAdvantage Platinum</h1>
         <div class="iconrow">
           <div class="iconbtn" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path opacity=".9" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
           <div class="iconbtn" id="openAddTxn" aria-label="List"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path opacity=".9" d="M4 4h16v2H4zM4 9h16v2H4zM4 14h11v2H4zM4 19h11v2H4z"/></svg></div>
@@ -272,7 +272,7 @@
 
       <div class="tile block">
         <div class="statusLine" id="txnStatus"><strong>Status: Approved</strong></div>
-        <div class="micro" id="txnCard">Sapphire Reserve</div>
+        <div class="micro" id="txnCard">AAdvantage Platinum</div>
       </div>
 
       <div class="row">
@@ -415,12 +415,12 @@
 
   /* === MANUAL DEFAULTS (edit; values persist via localStorage) === */
   const SETTINGS_DEFAULT = {
-    version: 6,                 // bump if you want to reset persisted balances
-    cardBalance: 49.46,
-    availableBalance: 275.54,
-    cardNumber: '5278 6812 3931 7295',
+    version: 1,                 // bump if you want to reset persisted balances
+    cardBalance: 0.00,
+    availableBalance: 325.00,
+    cardNumber: '5047 1902 7823 8126',
     cardExpiry: '07/30',
-    cardCvv: '528'
+    cardCvv: '872'
   };
 
   function loadBalances(){
@@ -825,5 +825,6 @@
 </script>
 </body>
 </html>
+
 
 
