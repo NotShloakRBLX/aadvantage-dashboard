@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<title>Sapphire Reserve</title>
+<style>
+  :root{
+    --bg:#0b0b0b;
+    --tile:rgba(255,255,255,.06);
+    --tileBorder:rgba(255,255,255,.10);
+    --text:#fff;
+    --muted:rgba(255,255,255,.62);
+    --shadow:0 14px 40px rgba(0,0,0,.40);
+    --t:.35s cubic-bezier(.2,.8,.2,1);
+    --radiusCard:28px;
+    --radiusTile:8px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;background:#000;color:var(--text);
+    font:15px -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased
+  }
+  .app{max-width:430px;height:100svh;margin:0 auto;position:relative;overflow:hidden;background:var(--bg)}
+  .views{display:flex;width:200%;height:100%;transition:transform var(--t)}
+  .view{width:100%;height:100%;overflow:auto;padding-bottom:28px;background:linear-gradient(#0b0b0b,#0b0b0b 50%,#0a0a0a)}
+  .view::-webkit-scrollbar{width:0;height:0}
+
+  .nav{
+    position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
+    padding:14px 14px 10px;
+    background:linear-gradient(180deg,rgba(10,10,10,.95),rgba(10,10,10,.55) 40%,transparent);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)
+  }
+  .nav h1{margin:0;font-size:28px;font-weight:800}
+  .pill{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);border-radius:999px;padding:6px 10px;font-weight:700}
+  .iconbtn{
+    width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;transition:transform var(--t)
+  }
+  .iconbtn:active{transform:scale(.96)}
+  .iconrow{display:flex;gap:10px}
+
+  .content{padding:6px 12px 28px}
+
+  /* Sharper credit card corners (still slightly rounded) */
+  .bigCard{
+    height:212px;
+    border-radius:7px; /* sharper than before */
+    overflow:hidden;box-shadow:var(--shadow);position:relative
+  }
+  .bigCard .visa{right:22px;bottom:18px}
+
+  /* Card gradients (purple/blue) */
+  .grad1{
+    background:
+      radial-gradient(140% 140% at 100% 100%,
+                      rgba(0,0,0,0) 52%,
+                      rgba(0,0,0,.85) 73%,
+                      #000 100%),
+      linear-gradient(120deg,
+                      #ff3b30 0%,
+                      #ff3b30 38%,
+                      #0a84ff 100%;
+  }
+  
+  .visa{position:absolute;right:29px;bottom:26px}
+  .visa svg{width:150px;height:auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
+
+  /* GRID */
+  .grid{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .tile{background:var(--tile);border:1px solid var(--tileBorder);border-radius:var(--radiusTile);padding:14px 16px;position:relative}
+  .kb{font-size:13px;color:var(--muted);margin:0 0 6px}
+  .val{font-size:26px;font-weight:800;margin:0}
+  .micro{font-size:12px;color:var(--muted);margin-top:4px}
+
+  .compact{padding:12px 14px}
+  .compact .kb{margin-bottom:2px}
+  .compact .val{font-size:25px}
+  .compact .micro{margin-top:0}
+
+  .full{grid-column:1/-1}
+
+  .bars{display:flex;gap:6px;margin-top:6px;align-items:flex-end}
+  .bars i{flex:1;height:20px;border-radius:6px;background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.45));opacity:.26}
+
+  /* Expanded Payment Due tile */
+  .dueTile{padding:12px 16px 16px}
+  .dueTall{grid-row:span 2;}
+  .dueHeader{margin:0 0 4px;color:var(--muted);font-size:13px}
+  .dueVal{line-height:1}
+  .dueVal .num{display:block;font-size:40px;font-weight:900;letter-spacing:-.3px}
+  .dueVal .unit{display:block;font-size:26px;font-weight:900;margin-top:2px;letter-spacing:-.2px}
+  .payBubble{
+    position:absolute;right:14px;bottom:14px;
+    width:70px;height:70px;border-radius:50%;
+    background:#000;color:#fff;display:grid;place-items:center;
+    font-weight:900;letter-spacing:.2px;
+    border:3px solid #fff;box-shadow:0 12px 30px rgba(0,0,0,.55);
+    transition:transform var(--t),opacity var(--t)
+  }
+  .payBubble:active{transform:scale(.95)}
+
+  /* Transaction list rows */
+  .txnRow{
+    display:flex;gap:12px;align-items:center;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.09);
+    border-radius:14px;padding:12px;cursor:pointer;
+  }
+  .txnRow + .txnRow{margin-top:10px}
+  .txnMain{flex:1}
+  .txnTitle{font-weight:800}
+  .txnSub{color:var(--muted);font-size:12px}
+  .txnAmt{font-weight:800}
+
+  /* Page positions (2 views) */
+  .pos-0 .views{transform:translateX(0%)}        /* Card */
+  .pos-1 .views{transform:translateX(-50%)}      /* Txn details */
+
+  /* Transaction details */
+  .txnHeader{padding:28px 18px 10px;text-align:center}
+  .txnAmount{font-size:60px;font-weight:900;letter-spacing:-.5px}
+  .txnMerchant{color:var(--muted);font-size:22px;font-weight:700;margin-top:6px}
+  .txnDate{color:var(--muted);font-size:16px;margin-top:4px}
+  .block{margin:14px 12px}
+  .row{
+    margin:14px 12px;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:16px;background:var(--tile);border:1px solid var(--tileBorder);
+    border-radius:var(--radiusTile)
+  }
+  .row h3{margin:0;font-size:18px}
+  .row .right{font-weight:900;font-size:18px}
+  .statusLine{font-size:18px;margin-bottom:4px}
+
+  /* Bottom sheet */
+  .sheet{position:fixed;inset:0;display:grid;place-items:end center;pointer-events:none;z-index:9}
+  .sheet.active{pointer-events:auto}
+  .dim{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity var(--t)}
+  .sheet.active .dim{opacity:1}
+  .panel{width:100%;max-width:430px;background:#fff;color:#000;border-radius:20px 20px 0 0;transform:translateY(100%);transition:transform var(--t);box-shadow:0 -20px 40px rgba(0,0,0,.35)}
+  .sheet.active .panel{transform:translateY(0)}
+  .panelHead{display:flex;align-items:center;justify-content:center;padding:12px 14px 0;position:relative}
+  .closeX{position:absolute;left:14px;top:8px;width:36px;height:36px;border-radius:10px;border:none;background:#efefef;font-size:20px;font-weight:900;cursor:pointer}
+  .title{font-size:28px;font-weight:900;margin:6px 0 0;text-align:center}
+  .ringWrap{position:relative;width:86%;max-width:360px;aspect-ratio:1;margin:12px auto 12px}
+  .ringWrap svg{width:100%;height:100%}
+  .centerText{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+  .amt{font-weight:900;font-size:44px}
+  .info{padding:0 14px 8px;text-align:center;font-weight:900;color:#1d1d1d}
+  .info small{display:block;margin-top:4px;color:#6a6a6a;font-weight:600}
+  .actions{display:flex;justify-content:center;padding:0 14px 18px}
+  .btn{border-radius:14px;padding:14px 22px;font-weight:900;border:0}
+  .primary{background:#000;color:#fff;min-width:65%}
+  .other{text-align:center;padding-bottom:20px;color:#007aff;font-weight:900}
+
+  /* Payment success pop-up */
+  .success{position:fixed;inset:0;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .25s var(--t);z-index:10}
+  .success.active{opacity:1;pointer-events:auto}
+  .success .box{
+    width:86%;max-width:360px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.14);
+    border-radius:18px;box-shadow:var(--shadow);padding:18px 18px 16px;text-align:center
+  }
+  .success .check{
+    width:56px;height:56px;border-radius:50%;margin:2px auto 10px;
+    display:grid;place-items:center;font-weight:900;background:#34c759;color:#000;box-shadow:0 8px 20px rgba(0,0,0,.35)
+  }
+  .success .title{font-weight:900;font-size:20px;margin:6px 0 4px}
+  .success .sub{color:var(--muted);font-weight:700}
+
+  /* Card details sheet tiny helper */
+  .cardFields{ padding:6px 12px 20px; }
+
+.visa svg, .visa img{
+  width:55px;
+  height:auto;
+  filter:drop-shadow(0 4px 12px rgba(0,0,0,.35));
+}
+
+.bigCard .visa{
+  right:10px
+  bottom:12px
+}
+
+/* ===== Add Transaction sheets & inputs ===== */
+.form{padding:8px 14px 18px}
+.form label{display:block;font-weight:800;margin:12px 0 6px}
+.form input,.form select{
+  width:100%;padding:12px 12px;border-radius:12px;border:1px solid #d9d9d9;
+  font:inherit
+}
+.btn.green{background:#34c759;color:#000;font-weight:900}
+.smallIcon{display:inline-block;vertical-align:-3px;margin-right:8px}
+.summary{padding:0 14px 14px;color:#1d1d1d;font-weight:700}
+.summary b{color:#000}
+
+/* Delete on txn details */
+.deleteWrap{padding:0 12px 24px}
+.deleteBtn{
+  width:100%;border:0;border-radius:14px;padding:14px 18px;font-weight:900;
+  background:#ff3b30;color:#fff
+}
+</style>
+</head>
+<body>
+<div class="app pos-0" id="app">
+  <div class="views">
+
+    <!-- Card dashboard (opens by default) -->
+    <section class="view" id="card">
+      <div class="nav">
+        <h1>Sapphire Reserve</h1>
+        <div class="iconrow">
+          <div class="iconbtn" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path opacity=".9" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
+          <div class="iconbtn" id="openAddTxn" aria-label="List"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path opacity=".9" d="M4 4h16v2H4zM4 9h16v2H4zM4 14h11v2H4zM4 19h11v2H4z"/></svg></div>
+          <div class="iconbtn" aria-label="More"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="bigCard grad1" id="bigCard">
+          <div class="visa">
+            <img src="./my-logo.png" alt="Card Brand">
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="tile compact">
+            <div class="kb">Card Balance</div>
+            <p class="val" id="cardBalance">$0.00</p>
+            <p class="micro" id="availableBalance">$0.00 Available</p>
+          </div>
+
+          <!-- EXPANDED Payment Due tile -->
+          <div class="tile dueTile dueTall" id="dueTile">
+            <p class="dueHeader">Payment Due In</p>
+            <div class="dueVal">
+              <span class="num">1</span>
+              <span class="unit">Month</span>
+            </div>
+            <button class="payBubble" id="openPay">Pay</button>
+          </div>
+
+          <div class="tile">
+            <div class="kb">Weekly Activity</div>
+            <div class="kb">+ $0.00 Daily Cash</div>
+            <div class="bars"><i style="height:22px"></i><i style="height:28px"></i><i style="height:16px"></i><i style="height:24px"></i><i style="height:18px"></i><i style="height:26px"></i><i style="height:12px"></i></div>
+          </div>
+
+          <!-- Savings Account -->
+          <div class="tile full">
+            <div class="kb">Savings Account</div>
+            <div class="val">$756.34</div>
+          </div>
+
+          <!-- Transactions -->
+          <div class="tile full" id="txnsTile">
+            <div class="kb" style="margin-bottom:8px">Latest Card Transactions</div>
+            <div id="txnList"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Transaction details -->
+    <section class="view" id="txnView">
+      <div class="nav">
+        <button class="pill" id="backTxn">Back</button>
+        <div class="iconrow"></div>
+      </div>
+
+      <div class="txnHeader">
+        <div class="txnAmount" id="txnAmount">$0.00</div>
+        <div class="txnMerchant" id="txnMerchant">Merchant</div>
+        <div class="txnDate" id="txnDate">MM/DD/YY, 0:00 PM</div>
+      </div>
+
+      <div class="tile block">
+        <div class="statusLine" id="txnStatus"><strong>Status: Approved</strong></div>
+        <div class="micro" id="txnCard">Sapphire Reserve</div>
+      </div>
+
+      <div class="row">
+        <h3>Total</h3>
+        <div class="right" id="txnTotal">$0.00</div>
+      </div>
+
+      <div class="deleteWrap">
+        <button class="deleteBtn" id="deleteTxnBtn">Delete Transaction</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Payment sheet -->
+  <div class="sheet" id="sheet">
+    <div class="dim" id="dim"></div>
+    <div class="panel">
+      <div class="panelHead"><button class="closeX" id="closeSheet" aria-label="Close">×</button></div>
+      <div class="title">Choose Amount</div>
+
+      <div class="ringWrap" id="ringWrap">
+        <svg viewBox="0 0 320 320" id="ringSvg" aria-hidden="true">
+          <defs>
+            <linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#51c0ff"/><stop offset="100%" stop-color="#0a84ff"/></linearGradient>
+            <linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#b8ffb9"/><stop offset="100%" stop-color="#34c759"/></linearGradient>
+            <linearGradient id="gradGray"  x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#e9ecef"/><stop offset="100%" stop-color="#cfd8dc"/></linearGradient>
+          </defs>
+          <circle cx="160" cy="160" r="120" stroke="#e9e9ef" stroke-opacity=".65" stroke-width="26" fill="none"/>
+          <circle id="progress" cx="160" cy="160" r="120" stroke="url(#gradGray)" stroke-width="26" fill="none"
+                  stroke-linecap="round" transform="rotate(-90 160 160)" />
+          <circle id="handle" cx="160" cy="40" r="12" fill="#fff" stroke="#e6e6e6" stroke-width="2"/>
+        </svg>
+
+        <div class="centerText" aria-live="polite" aria-atomic="true">
+          <div class="amt" id="amountLabel">$0.00</div>
+        </div>
+      </div>
+
+      <div class="info" id="payInfo">
+        Pay June Balance
+        <small>Paying your monthly balance is recommended to help keep you financially healthy and avoid interest charges.</small>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="payNowBtn">Pay $0.00</button>
+      </div>
+      <div class="other" id="otherAmountBtn">Other Amount</div>
+    </div>
+  </div>
+
+  <!-- Success popup -->
+  <div class="success" id="paySuccess" aria-live="polite" aria-atomic="true">
+    <div class="box">
+      <div class="check">✓</div>
+      <div class="title">Payment Successful</div>
+      <div class="sub" id="paySuccessMsg">$0.00 has been applied to your card.</div>
+    </div>
+  </div>
+
+  <!-- Card details sheet -->
+  <div class="sheet" id="cardSheet" aria-hidden="true">
+    <div class="dim" id="cardDim"></div>
+    <div class="panel">
+      <div class="panelHead">
+        <button class="closeX" id="closeCardSheet" aria-label="Close">×</button>
+      </div>
+      <div class="title">Card Details</div>
+      <div class="cardFields">
+        <div class="row">
+          <h3>Card Number</h3>
+          <div class="right" id="cdNumber">0000 0000 0000 0000</div>
+        </div>
+        <div class="row">
+          <h3>Expiry</h3>
+          <div class="right" id="cdExpiry">MM/YY</div>
+        </div>
+        <div class="row">
+          <h3>Security Code</h3>
+          <div class="right" id="cdCvv">000</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Transaction sheet -->
+  <div class="sheet" id="addTxnSheet" aria-hidden="true">
+    <div class="dim" id="addTxnDim"></div>
+    <div class="panel">
+      <div class="panelHead"><button class="closeX" id="closeAddTxn" aria-label="Close">×</button></div>
+      <div class="title">Add Transaction</div>
+      <div class="form">
+        <label for="txMerchant">Merchant</label>
+        <input id="txMerchant" type="text" placeholder="e.g., Starbucks" />
+
+        <label for="txAmount">Amount</label>
+        <input id="txAmount" type="number" step="0.01" inputmode="decimal" placeholder="0.00" />
+
+        <label for="txWhen">Date &amp; Time</label>
+        <input id="txWhen" type="datetime-local" />
+
+        <label for="txStatus">Status</label>
+        <select id="txStatus">
+          <option>Approved</option>
+          <option>Refunded</option>
+          <option>Posted</option>
+        </select>
+      </div>
+      <div class="actions">
+        <button class="btn green" id="txContinue">
+          <span class="smallIcon">✔︎</span>Continue
+        </button>
+      </div>
+      <div class="other" id="txCancelFromForm">Cancel</div>
+    </div>
+  </div>
+
+  <!-- Confirm Transaction sheet -->
+  <div class="sheet" id="confirmTxnSheet" aria-hidden="true">
+    <div class="dim" id="confirmDim"></div>
+    <div class="panel">
+      <div class="panelHead"><button class="closeX" id="closeConfirm" aria-label="Close">×</button></div>
+      <div class="title">Confirm Transaction</div>
+      <div class="summary" id="confirmSummary"></div>
+      <div class="actions">
+        <button class="btn primary" id="confirmAddBtn">Add Transaction</button>
+      </div>
+      <div class="other" id="editTxnBtn">Go Back &amp; Edit</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(()=> {
+  const app=document.getElementById('app');
+
+  // Transaction details nav
+  document.getElementById('backTxn').addEventListener('click', ()=>{ app.className='app pos-0'; });
+
+  /* === MANUAL DEFAULTS (edit; values persist via localStorage) === */
+  const SETTINGS_DEFAULT = {
+    version: 6,                 // bump if you want to reset persisted balances
+    cardBalance: 49.46,
+    availableBalance: 275.54,
+    cardNumber: '5278 6812 3931 7295',
+    cardExpiry: '07/30',
+    cardCvv: '528'
+  };
+
+  function loadBalances(){
+    try{
+      const raw = localStorage.getItem('demo_balances');
+      if(!raw) return {...SETTINGS_DEFAULT};
+      const s = JSON.parse(raw);
+      if (typeof s.cardBalance==='number' && typeof s.availableBalance==='number' &&
+          s.version === SETTINGS_DEFAULT.version){
+        return {...SETTINGS_DEFAULT, ...s};
+      }
+    }catch(e){}
+    return {...SETTINGS_DEFAULT};
+  }
+  let SETTINGS = loadBalances();
+  const saveBalances = () => localStorage.setItem('demo_balances', JSON.stringify(SETTINGS));
+
+  /* ----- Payment sheet open/close ----- */
+  const sheet=document.getElementById('sheet');
+  const dim=document.getElementById('dim');
+  const openPay=document.getElementById('openPay');
+  const closeSheet=()=>sheet.classList.remove('active');
+  openPay.addEventListener('click',()=>sheet.classList.add('active'));
+  dim.addEventListener('click',closeSheet);
+  document.getElementById('closeSheet').addEventListener('click',closeSheet);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape') closeSheet()});
+
+  /* ----- Circular slider (locks at max; clockwise disabled when locked) ----- */
+  const MIN = 0.00;
+  let   MAX = SETTINGS.cardBalance;
+  let   THRESH = +(MAX * 0.82).toFixed(2);
+
+  const ringWrap=document.getElementById('ringWrap');
+  const ringSvg=document.getElementById('ringSvg');
+  const progress=document.getElementById('progress');
+  const handle=document.getElementById('handle');
+  const amountLabel=document.getElementById('amountLabel');
+  const payBtn=document.getElementById('payNowBtn');
+  const info=document.getElementById('payInfo');
+
+  const R=120;
+  const C=2*Math.PI*R;
+  progress.setAttribute('stroke-dasharray', `${C}`);
+  progress.setAttribute('stroke-dashoffset', `${C}`);
+
+  let amount=MIN;
+  let dragging=false, lastFrac=0, lockedAtMax=false;
+
+  function setUI(v){
+    if(lockedAtMax || Math.abs(v-MAX)<0.01){
+      progress.setAttribute('stroke','url(#gradBlue)');
+      info.innerHTML='Pay Card Balance<small>Paying the total amount you’ve spent is a great way to clear your balance and stay ahead on your finances.</small>';
+    }else if(v>THRESH){
+      progress.setAttribute('stroke','url(#gradGreen)');
+      info.innerHTML='Pay More Toward Your Balance<small>Paying more of your card balance helps free up available credit and reduces the amount to pay next month.</small>';
+    }else{
+      progress.setAttribute('stroke','url(#gradGray)');
+      info.innerHTML='Pay June Balance<small>Paying your monthly balance is recommended to help keep you financially healthy and avoid interest charges.</small>';
+    }
+  }
+
+  const signedDelta = (a,b)=>(((a-b)+1.5)%1)-0.5;
+
+  function applyFromFraction(fracRaw, fromDrag=false){
+    let f = Math.max(0, Math.min(0.999999, fracRaw));
+    const delta = signedDelta(f, lastFrac);
+
+    if (lockedAtMax){
+      if (delta > 0){
+        f = 1;
+      }else{
+        lockedAtMax = false;
+      }
+    }
+
+    const NEAR_MAX = 0.995;
+    if (!lockedAtMax && f >= NEAR_MAX){
+      lockedAtMax = true;
+      f = 1;
+    }
+
+    lastFrac = f;
+    const fracForAmount = (f===1)?1:f;
+    amount = +((MIN + fracForAmount*(MAX-MIN)).toFixed(2));
+
+    const dash = C*(1-fracForAmount);
+    progress.style.transition = fromDrag ? 'none' : 'stroke-dashoffset 220ms ease, stroke 220ms ease';
+    progress.setAttribute('stroke-dashoffset', `${dash}`);
+
+    const ang=(-90 + 360*fracForAmount)*Math.PI/180;
+    const hx=160 + R*Math.cos(ang), hy=160 + R*Math.sin(ang);
+    handle.style.transition = fromDrag ? 'none' : 'cx 180ms ease, cy 180ms ease';
+    handle.setAttribute('cx',hx.toFixed(2));
+    handle.setAttribute('cy',hy.toFixed(2));
+
+    amountLabel.textContent='$'+amount.toFixed(2);
+    payBtn.textContent='Pay $'+amount.toFixed(2);
+    setUI(amount);
+  }
+
+  const cardBalanceEl = document.getElementById('cardBalance');
+  const availableEl   = document.getElementById('availableBalance');
+  const fmtUSD = n => n.toLocaleString(undefined,{style:'currency',currency:'USD'});
+
+  function applyBalances(){
+    cardBalanceEl.textContent = fmtUSD(SETTINGS.cardBalance);
+    availableEl.textContent   = `${fmtUSD(SETTINGS.availableBalance)} Available`;
+
+    MAX    = Math.max(0, SETTINGS.cardBalance);
+    THRESH = +(MAX * 0.82).toFixed(2);
+    lockedAtMax = false;
+    lastFrac = 0;
+    applyFromFraction(0, false);
+  }
+
+  function fractionFromPointer(evt){
+    const rect=ringWrap.getBoundingClientRect();
+    const x=(evt.touches?evt.touches[0].clientX:evt.clientX)-rect.left;
+    const y=(evt.touches?evt.touches[0].clientY:evt.clientY)-rect.top;
+    const cx=rect.width/2, cy=rect.height/2;
+    let theta=Math.atan2(y-cy,x-cx);
+    theta+=Math.PI/2;
+    if(theta<0) theta+=Math.PI*2;
+    return theta/(Math.PI*2);
+  }
+
+  const start=e=>{dragging=true; applyFromFraction(fractionFromPointer(e), true); e.preventDefault();}
+  const move =e=>{if(!dragging) return; applyFromFraction(fractionFromPointer(e), true);}
+  const end  =()=>{dragging=false;}
+
+  handle.addEventListener('mousedown',start); handle.addEventListener('touchstart',start,{passive:false});
+  ringSvg.addEventListener('mousedown',start); ringSvg.addEventListener('touchstart',start,{passive:false});
+  window.addEventListener('mousemove',move,{passive:false}); window.addEventListener('touchmove',move,{passive:false});
+  window.addEventListener('mouseup',end); window.addEventListener('touchend',end);
+
+  document.getElementById('otherAmountBtn').addEventListener('click',()=>{
+    const raw=prompt('Enter a payment amount (0.00–'+MAX.toFixed(2)+')', amount.toFixed(2));
+    if(!raw) return; const n=parseFloat(raw.replace(/[^\d.]/g,'')); if(isFinite(n)) {
+      const frac = Math.max(0, Math.min(1, n/MAX));
+      applyFromFraction(frac,false);
+    }
+  });
+
+  // SUCCESS POPUP
+  const successEl = document.getElementById('paySuccess');
+  const successMsg = document.getElementById('paySuccessMsg');
+  function showPaySuccess(n){
+    successMsg.textContent = `${fmtUSD(n)} has been applied to your card.`;
+    successEl.classList.add('active');
+    const hide = ()=>successEl.classList.remove('active');
+    successEl.addEventListener('click', hide, {once:true});
+    setTimeout(hide, 1600);
+  }
+
+  // Pay -> update balances (persist) -> success pop-up + add transaction
+  payBtn.addEventListener('click', ()=>{
+    if (amount <= 0) { sheet.classList.remove('active'); return; }
+
+    const payIso = new Date().toISOString();
+
+    SETTINGS.cardBalance      = +Math.max(0, SETTINGS.cardBalance - amount).toFixed(2);
+    SETTINGS.availableBalance = +(SETTINGS.availableBalance + amount).toFixed(2);
+    saveBalances();
+
+    window.addPayment({ amount, iso: payIso });
+
+    applyBalances();
+    sheet.classList.remove('active');
+    showPaySuccess(amount);
+  });
+
+  // Apply balances on load
+  applyBalances();
+
+  /* ---------- TRANSACTIONS ---------- */
+  const txnListEl = document.getElementById('txnList');
+
+  const TXN_STORE_KEY = 'demo_txns';
+  function loadTransactions(){
+    try{
+      const raw = localStorage.getItem(TXN_STORE_KEY);
+      if(!raw) return null;
+      const arr = JSON.parse(raw);
+      if (Array.isArray(arr)) return arr;
+    }catch(e){}
+    return null;
+  }
+  function saveTransactions(){
+    try{ localStorage.setItem(TXN_STORE_KEY, JSON.stringify(transactions)); }catch(e){}
+  }
+
+  let transactions = loadTransactions() || [
+    {
+      id: rid(),
+      kind: 'refund',
+      merchant: 'Apple Store',
+      amount: 40.35,
+      status: 'Refunded',
+      card: 'Sapphire Reserve',
+      iso: '2023-07-14T16:32:00'
+    },
+    {
+      id: rid(),
+      kind: 'purchase',
+      merchant: 'FANATEC',
+      amount: 277.41,
+      status: 'Approved',
+      card: 'Sapphire Reserve',
+      iso: '2025-04-23T13:04:00'
+    }
+  ];
+
+  function rid(){ return 't_'+Math.random().toString(36).slice(2,9) }
+
+  // Display rule by STATUS (not kind)
+  function formatDisplay(t){
+    const negative = (t.status==='Refunded' || t.status==='Posted');
+    return (negative?'- ':'') + '$' + Number(t.amount).toFixed(2);
+  }
+  function formatMoneyAbs(n){ return '$' + Math.abs(n).toFixed(2) }
+  function shortDate(iso){
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'});
+  }
+  function fullDateTime(iso){
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'}) + ', ' +
+           d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  }
+
+  function renderTransactions(){
+    // Newest (later) on top
+    transactions.sort((a,b)=> new Date(b.iso) - new Date(a.iso));
+    txnListEl.innerHTML = transactions.map(t => `
+      <div class="txnRow" data-id="${t.id}" tabindex="0" role="button" aria-label="Open ${t.merchant} transaction">
+        <div class="txnMain">
+          <div class="txnTitle">${t.merchant}${t.status ? ` <span style="opacity:.6">• ${t.status}</span>` : ''}</div>
+          <div class="txnSub">${shortDate(t.iso)}</div>
+        </div>
+        <div class="txnAmt">${formatDisplay(t)}</div>
+      </div>
+    `).join('');
+
+    txnListEl.querySelectorAll('.txnRow').forEach(row=>{
+      row.addEventListener('click',()=>openTxn(row.dataset.id));
+      row.addEventListener('keypress',e=>{ if(e.key==='Enter') openTxn(row.dataset.id) });
+    });
+  }
+
+  let currentTxnId = null;
+  function openTxn(id){
+    const t = transactions.find(x=>x.id===id);
+    if(!t) return;
+    currentTxnId = id;
+    document.getElementById('txnAmount').textContent = formatMoneyAbs(t.amount);
+    document.getElementById('txnMerchant').textContent = t.merchant;
+    document.getElementById('txnDate').textContent = fullDateTime(t.iso);
+    document.getElementById('txnStatus').innerHTML = `<strong>Status: ${t.status || 'Approved'}</strong>`;
+    document.getElementById('txnCard').textContent = t.card || 'Sapphire Reserve';
+    document.getElementById('txnTotal').textContent = formatMoneyAbs(t.amount);
+    app.className = 'app pos-1';
+  }
+
+  document.getElementById('deleteTxnBtn').addEventListener('click', ()=>{
+    if(!currentTxnId) return;
+    const i = transactions.findIndex(t=>t.id===currentTxnId);
+    if(i>-1){
+      transactions.splice(i,1);
+      saveTransactions();
+      renderTransactions();
+      currentTxnId = null;
+      app.className = 'app pos-0';
+    }
+  });
+
+  // Public helpers (defaults now Sapphire Reserve)
+  window.addPurchase = ({merchant, amount, iso, card='Sapphire Reserve', status='Approved'})=>{
+    transactions.push({ id: rid(), kind:'purchase', merchant, amount:Number(amount), iso, status, card });
+    saveTransactions();
+    renderTransactions();
+  };
+  window.addRefund = ({merchant, amount, iso, card='Sapphire Reserve', status='Refunded'})=>{
+    transactions.push({ id: rid(), kind:'refund', merchant, amount:Number(amount), iso, status, card });
+    saveTransactions();
+    renderTransactions();
+  };
+  window.addPayment = ({amount, iso, card='Sapphire Reserve', merchant='Card Payment', status='Posted'})=>{
+    transactions.push({ id: rid(), kind:'payment', merchant, amount:Number(amount), iso, status, card });
+    saveTransactions();
+    renderTransactions();
+  };
+  window.removeTransaction = (id)=>{
+    const i = transactions.findIndex(t=>t.id===id);
+    if(i>-1){ transactions.splice(i,1); saveTransactions(); renderTransactions(); }
+  };
+  window.removeTransactionWhere = (criteria)=>{
+    const i = transactions.findIndex(t => Object.entries(criteria).every(([k,v]) => t[k]===v));
+    if(i>-1){ transactions.splice(i,1); saveTransactions(); renderTransactions(); }
+  };
+
+  renderTransactions();
+
+  /* --- Card details sheet wiring (tap big card to open) --- */
+  const cardSheet = document.getElementById('cardSheet');
+  const cardDim = document.getElementById('cardDim');
+  const closeCardSheetBtn = document.getElementById('closeCardSheet');
+  const cdNumber = document.getElementById('cdNumber');
+  const cdExpiry = document.getElementById('cdExpiry');
+  const cdCvv = document.getElementById('cdCvv');
+
+  function openCardSheet(){
+    cdNumber.textContent = (SETTINGS.cardNumber || '')
+      .replace(/\s+/g,'')
+      .replace(/(\d{4})(?=\d)/g,'$1 ');
+    cdExpiry.textContent = SETTINGS.cardExpiry || 'MM/YY';
+    cdCvv.textContent = SETTINGS.cardCvv || '000';
+    cardSheet.classList.add('active');
+  }
+  function closeCardSheet(){ cardSheet.classList.remove('active'); }
+
+  cardDim.addEventListener('click', closeCardSheet);
+  closeCardSheetBtn.addEventListener('click', closeCardSheet);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCardSheet(); });
+
+  const bigCardEl = document.getElementById('bigCard');
+  if (bigCardEl){
+    bigCardEl.style.cursor='pointer';
+    bigCardEl.addEventListener('click', openCardSheet);
+  }
+
+  /* ===== Add Transaction flow ===== */
+  const addTxnSheet = document.getElementById('addTxnSheet');
+  const addTxnDim   = document.getElementById('addTxnDim');
+  const openAddTxn  = document.getElementById('openAddTxn');
+  const closeAddTxn = document.getElementById('closeAddTxn');
+  const txMerchant  = document.getElementById('txMerchant');
+  const txAmount    = document.getElementById('txAmount');
+  const txWhen      = document.getElementById('txWhen');
+  const txStatus    = document.getElementById('txStatus');
+  const txContinue  = document.getElementById('txContinue');
+  const txCancelFromForm = document.getElementById('txCancelFromForm');
+
+  const confirmSheet = document.getElementById('confirmTxnSheet');
+  const confirmDim   = document.getElementById('confirmDim');
+  const closeConfirm = document.getElementById('closeConfirm');
+  const confirmSummary = document.getElementById('confirmSummary');
+  const confirmAddBtn  = document.getElementById('confirmAddBtn');
+  const editTxnBtn     = document.getElementById('editTxnBtn');
+
+  function openAddSheet(){ addTxnSheet.classList.add('active'); }
+  function closeAddSheet(){ addTxnSheet.classList.remove('active'); }
+  function openConfirm(){ confirmSheet.classList.add('active'); }
+  function closeConfirmSheet(){ confirmSheet.classList.remove('active'); }
+
+  openAddTxn.addEventListener('click', openAddSheet);
+  addTxnDim.addEventListener('click', closeAddSheet);
+  closeAddTxn.addEventListener('click', closeAddSheet);
+  txCancelFromForm.addEventListener('click', closeAddSheet);
+
+  confirmDim.addEventListener('click', closeConfirmSheet);
+  closeConfirm.addEventListener('click', closeConfirmSheet);
+  editTxnBtn.addEventListener('click', ()=>{ closeConfirmSheet(); openAddSheet(); });
+
+  let pendingTxn = null;
+  function fullDateTime(iso){
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'}) + ', ' +
+           d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+  }
+  txContinue.addEventListener('click', ()=>{
+    const m = (txMerchant.value||'').trim();
+    const a = parseFloat(txAmount.value);
+    const w = txWhen.value ? new Date(txWhen.value) : new Date();
+    const s = txStatus.value || 'Approved';
+    if(!m || !isFinite(a)){ return; }
+    pendingTxn = { merchant:m, amount: +a.toFixed(2), iso: w.toISOString(), status:s };
+    confirmSummary.innerHTML = `
+      <p><b>Merchant:</b> ${m}</p>
+      <p><b>Amount:</b> $${pendingTxn.amount.toFixed(2)}</p>
+      <p><b>Date &amp; Time:</b> ${fullDateTime(pendingTxn.iso)}</p>
+      <p><b>Status:</b> ${s}</p>
+    `;
+    closeAddSheet();
+    openConfirm();
+  });
+
+  confirmAddBtn.addEventListener('click', ()=>{
+    if(!pendingTxn) return;
+    const {merchant, amount, iso, status} = pendingTxn;
+    if(status==='Approved'){
+      window.addPurchase({merchant, amount, iso, status, card:'Sapphire Reserve'});
+    }else if(status==='Refunded'){
+      window.addRefund({merchant, amount, iso, status, card:'Sapphire Reserve'});
+    }else{
+      window.addPayment({amount, iso, status, card:'Sapphire Reserve', merchant});
+    }
+    pendingTxn = null;
+    closeConfirmSheet();
+  });
+
+})();
+</script>
+</body>
+</html>
+
+
