@@ -515,7 +515,7 @@
 
   /* === MANUAL DEFAULTS (edit; values persist via localStorage) === */
   const SETTINGS_DEFAULT = {
-    version: 8,                 // bump if you want to reset persisted balances
+    version: 9,                 // bump if you want to reset persisted balances
     cardBalance: 0.00,
     availableBalance: 325.00,
     cashback: 0.00,             // dashboard Cashback tile (auto from transactions)
@@ -560,7 +560,7 @@ function emitLedgerEvent(evt) {
 }
 
   // === Cashback version gate (bump to reset tile & slider without deleting txns) ===
-const CASHBACK_VERSION = 1;                 // <— bump this to 2, 3, ... to start fresh
+const CASHBACK_VERSION = 2;                 // <— bump this to 2, 3, ... to start fresh
 const CBV_KEY = LS_KEYS.CBV;
 const ensureCbv = () => {
   const stored = Number(localStorage.getItem(CBV_KEY) || '0');
@@ -1171,4 +1171,5 @@ ensureCbv();
 </script>
 </body>
 </html>
+
 
