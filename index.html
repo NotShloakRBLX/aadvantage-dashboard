@@ -502,6 +502,14 @@
 (()=> {
   const app=document.getElementById('app');
 
+  // ---- LocalStorage namespace for THIS card ----
+  const CARD_NS = 'aa_platinum';
+  const LS_KEYS = {
+    BALANCES: `${CARD_NS}:balances`,
+    TXNS:     `${CARD_NS}:txns`,
+    CBV:      `${CARD_NS}:cbv_current`
+  };
+
   // Transaction details nav
   document.getElementById('backTxn').addEventListener('click', ()=>{ app.className='app pos-0'; });
 
@@ -518,7 +526,7 @@
 
   function loadBalances(){
     try{
-      const raw = localStorage.getItem('demo_balances');
+      const raw = localStorage.getItem(LS_KEYS.BALANCES);
       if(!raw) return {...SETTINGS_DEFAULT};
       const s = JSON.parse(raw);
       if (typeof s.cardBalance==='number' && typeof s.availableBalance==='number' &&
@@ -529,7 +537,7 @@
     return {...SETTINGS_DEFAULT};
   }
   let SETTINGS = loadBalances();
-  const saveBalances = () => localStorage.setItem('demo_balances', JSON.stringify(SETTINGS));
+  const saveBalances = () => localStorage.setItem(LS_KEYS.BALANCES, JSON.stringify(SETTINGS));
 
   // === Cross-app ledger event emitter (same-origin) ===
 const LEDGER_CHANNEL_NAME = 'ledger';
@@ -553,7 +561,7 @@ function emitLedgerEvent(evt) {
 
   // === Cashback version gate (bump to reset tile & slider without deleting txns) ===
 const CASHBACK_VERSION = 1;                 // <— bump this to 2, 3, ... to start fresh
-const CBV_KEY = 'cbv_current';
+const CBV_KEY = LS_KEYS.CBV;
 const ensureCbv = () => {
   const stored = Number(localStorage.getItem(CBV_KEY) || '0');
   if (stored !== CASHBACK_VERSION) {
@@ -731,7 +739,7 @@ ensureCbv();
   /* ---------- TRANSACTIONS + CASHBACK ---------- */
   const txnListEl = document.getElementById('txnList');
 
-  const TXN_STORE_KEY = 'demo_txns';
+  const TXN_STORE_KEY = LS_KEYS.TXNS;
   function loadTransactions(){
     try{
       const raw = localStorage.getItem(TXN_STORE_KEY);
