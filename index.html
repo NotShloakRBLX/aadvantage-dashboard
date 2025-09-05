@@ -833,7 +833,7 @@
   function rid(){return 't_'+Math.random().toString(36).slice(2,9)}
 
   const round2=n=>Math.round(n*100)/100;
-  const CASHBACK_RATES={shopping:0.05,food:0.04, travel:0.04, streaming:0.04,gaming:0.03, messaging:0.03};
+  const CASHBACK_RATES={shopping:0.04,food:0.04, travel:0.05, streaming:0.04,gaming:0.03, messaging:0.03};
   const rateForCategory = cat => CASHBACK_RATES[cat] ?? 0;
   const calcCashback=(amt,cat)=>round2((Number(amt)||0)*rateForCategory(cat));
   const getTxnCashback=t=>(typeof t.cashback==='number') ? t.cashback : (t.kind==='purchase' ? calcCashback(t.amount, t.category) : 0);
@@ -1251,6 +1251,7 @@
 </script>
 </body>
 </html>
+
 
 
 
