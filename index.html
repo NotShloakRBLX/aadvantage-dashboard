@@ -211,14 +211,14 @@
 
 <script>
   window.firebaseConfig = {
-    apiKey: "AIzaSyCVd0ORxpR20e5uq3dzW2_d3zQ50J-PhS4",
-    authDomain: "sapphire-reserve-e3b41.firebaseapp.com",
-    projectId: "sapphire-reserve-e3b41",
-    storageBucket: "sapphire-reserve-e3b41.firebasestorage.app",
-    messagingSenderId: "373486960680",
-    appId: "1:373486960680:web:e0c259af890a4ed7ebb51d"
+    apiKey: "AIzaSyBiKatzwfc-8JrHZ0ZWxrMkTI1StL8YjrY",
+  authDomain: "aadvantage-platinum.firebaseapp.com",
+  projectId: "aadvantage-platinum",
+  storageBucket: "aadvantage-platinum.firebasestorage.app",
+  messagingSenderId: "971083860263",
+  appId: "1:971083860263:web:fdb070ce1618ab98ce0102"
   };
-  window.CLOUD_DOC_ID = "sapphire-reserve";
+  window.CLOUD_DOC_ID = "aadvantage-platinum";
 </script>
 </head>
 <body>
@@ -227,7 +227,7 @@
     <!-- HOME -->
     <section class="view" id="card">
       <div class="nav">
-        <h1>Sapphire Reserve</h1>
+        <h1>AAdvantage Platinum</h1>
         <div class="iconrow">
           <div class="iconbtn" id="openCardDetails" aria-label="Card details">
             <!-- Card + 123 icon (Apple-style) -->
@@ -289,7 +289,7 @@
       </div>
       <div class="tile block">
         <div class="statusLine" id="txnStatus"><strong>Status: Approved</strong></div>
-        <div class="micro" id="txnCard">Sapphire Reserve</div>
+        <div class="micro" id="txnCard">AAdvantage Platinum</div>
       </div>
       <div class="row"><h3>Total</h3><div class="right" id="txnTotal">$0.00</div></div>
       <div class="row" id="cashbackRow"><h3>Cashback</h3><div class="right" id="txnCashback">$0.00</div></div>
@@ -1053,9 +1053,9 @@
   });
   confirmAddBtn.addEventListener('click',()=>{
     if(!pendingTxn)return; const {merchant,amount,iso,status,category}=pendingTxn;
-    if(status==='Approved'){window.addPurchase({merchant,amount,iso,status,card:'Sapphire Reserve',category})}
-    else if(status==='Refunded'){window.addRefund({merchant,amount,iso,status,card:'Sapphire Reserve',category})}
-    else{window.addPayment({amount,iso,status,card:'Sapphire Reserve',merchant,category})}
+    if(status==='Approved'){window.addPurchase({merchant,amount,iso,status,card:'AAdvantage Platinum',category})}
+    else if(status==='Refunded'){window.addRefund({merchant,amount,iso,status,card:'AAdvantage Platinum',category})}
+    else{window.addPayment({amount,iso,status,card:'AAdvantage Platinum',merchant,category})}
     pendingTxn=null; closeConfirmSheet();
   });
 
@@ -1251,6 +1251,7 @@
 </script>
 </body>
 </html>
+
 
 
 
