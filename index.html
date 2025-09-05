@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum=1, viewport-fit=cover" />
 <title>AAdvantage Platinum</title>
 <style>
   :root{
@@ -18,127 +18,95 @@
   }
   *{box-sizing:border-box}
   html,body{height:100%}
-  body{
-    margin:0;background:#000;color:var(--text);
+  body{margin:0;background:#000;color:var(--text);
     font:15px -apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased
-  }
+    -webkit-font-smoothing:antialiased}
   .app{max-width:430px;height:100svh;margin:0 auto;position:relative;overflow:hidden;background:var(--bg)}
-  .views{display:flex;width:200%;height:100%;transition:transform var(--t)}
+  .views{display:flex;width:300%;height:100%;transition:transform var(--t)}
   .view{width:100%;height:100%;overflow:auto;padding-bottom:28px;background:linear-gradient(#0b0b0b,#0b0b0b 50%,#0a0a0a)}
   .view::-webkit-scrollbar{width:0;height:0}
-
-  .nav{
-    position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
-    padding:14px 14px 10px;
-    background:linear-gradient(180deg,rgba(10,10,10,.95),rgba(10,10,10,.55) 40%,transparent);
-    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)
-  }
+  .nav{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
+    padding:14px 14px 10px;background:linear-gradient(180deg,rgba(10,10,10,.95),rgba(10,10,10,.55) 40%,transparent);
+    -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
   .nav h1{margin:0;font-size:28px;font-weight:800}
   .pill{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);border-radius:999px;padding:6px 10px;font-weight:700}
-  .iconbtn{
-    width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,.06);
-    border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;transition:transform var(--t)
-  }
+  .iconbtn{width:34px;height:34px;border-radius:999px;background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;transition:transform var(--t)}
   .iconbtn:active{transform:scale(.96)}
   .iconrow{display:flex;gap:10px}
-
   .content{padding:6px 12px 28px}
 
-  /* Sharper credit card corners (still slightly rounded) */
-  .bigCard{
-    height:212px;
-    border-radius:7px;
-    overflow:hidden;box-shadow:var(--shadow);position:relative
-  }
+  .bigCard{height:212px;border-radius:7px;overflow:hidden;box-shadow:var(--shadow);position:relative}
   .bigCard .visa{right:22px;bottom:18px}
-
-  /* Card gradients (purple/blue) */
-  .grad1{
-    background:
-     radial-gradient(140% 140% at 100% 100%,
-       transparent 55%
-       rgba(0,0,0,.75) 78%,
-       #000 100%),
-     linear-gradient(115deg, #ff3b30 0%, #0a84ff 60%);
-  }
-  
+  .grad1{background:
+    radial-gradient(120% 120% at 95% 95%,rgba(0,0,0,0) 45%,rgba(0,0,0,0.75) 70%,#000 100%),
+    linear-gradient(110deg,#0a0a0a 0%,#0a0a0a 40%, #0078D2 72%, #C8102E 95%);
+        }
   .visa{position:absolute;right:29px;bottom:26px}
   .visa svg{width:150px;height:auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
 
-  /* GRID */
   .grid{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px;}
   .tile{background:var(--tile);border:1px solid var(--tileBorder);border-radius:var(--radiusTile);padding:14px 16px;position:relative}
   .kb{font-size:13px;color:var(--muted);margin:0 0 6px}
   .val{font-size:26px;font-weight:800;margin:0}
   .micro{font-size:12px;color:var(--muted);margin-top:4px}
-
   .compact{padding:12px 14px}
   .compact .kb{margin-bottom:2px}
   .compact .val{font-size:25px}
   .compact .micro{margin-top:0}
-
   .full{grid-column:1/-1}
 
-  .bars{display:flex;gap:6px;margin-top:6px;align-items:flex-end}
-  .bars i{flex:1;height:20px;border-radius:6px;background:linear-gradient(180deg,rgba(255,255,255,.8),rgba(255,255,255,.45));opacity:.26}
-
-  /* Expanded Payment Due tile */
   .dueTile{padding:12px 16px 16px}
   .dueTall{grid-row:span 2;}
   .dueHeader{margin:0 0 4px;color:var(--muted);font-size:13px}
   .dueVal{line-height:1}
   .dueVal .num{display:block;font-size:40px;font-weight:900;letter-spacing:-.3px}
   .dueVal .unit{display:block;font-size:26px;font-weight:900;margin-top:2px;letter-spacing:-.2px}
-  .payBubble{
-    position:absolute;right:14px;bottom:14px;
-    width:70px;height:70px;border-radius:50%;
-    background:#000;color:#fff;display:grid;place-items:center;
-    font-weight:900;letter-spacing:.2px;
-    border:3px solid #fff;box-shadow:0 12px 30px rgba(0,0,0,.55);
-    transition:transform var(--t),opacity var(--t)
-  }
+  .payBubble{position:absolute;right:14px;bottom:14px;width:56px;height:56px;border-radius:50%;
+    background:#000;color:#fff;display:grid;place-items:center;font-weight:900;letter-spacing:.2px;
+    border:none;outline:none;-webkit-tap-highlight-color:transparent;box-shadow:0 10px 24px rgba(0,0,0,.45);font-size:14px;}
   .payBubble:active{transform:scale(.95)}
 
-  /* Transaction list rows */
-  .txnRow{
-    display:flex;gap:12px;align-items:center;
-    background:rgba(255,255,255,.04);
-    border:1px solid rgba(255,255,255,.09);
-    border-radius:14px;padding:12px;cursor:pointer;
-  }
-  .txnRow + .txnRow{margin-top:10px}
+  .txnRow{display:flex;gap:12px;align-items:flex-start;background:transparent;border:0;border-radius:12px;
+    padding:14px 16px;cursor:pointer;position:relative}
+  .txnRow + .txnRow{margin-top:0}
+  .txnIcon{width:54px;height:54px;border-radius:12px;background:rgba(255,255,255,.10);display:grid;place-items:center;flex:0 0 54px}
+  .txnIcon img{width:30px;height:30px;object-fit:contain;filter:drop-shadow(0 1px 6px rgba(0,0,0,.25))}
   .txnMain{flex:1}
   .txnTitle{font-weight:800}
-  .txnSub{color:var(--muted);font-size:12px}
-  .txnAmt{font-weight:800}
+  .txnSub{color:var(--muted);font-size:12px;margin-top:2px}
+  .txnAmt{font-weight:600}
+  .txnRight{display:flex;align-items:flex-start;gap:8px}
+  .chev{opacity:.55;font-size:20px;line-height:1;margin-top:1px}
+  .txnStack{border:1px solid rgba(255,255,255,.10);border-radius:12px;overflow:hidden;background:rgba(255,255,255,.035)}
+  .txnStack .txnRow{padding:16px 16px;background:transparent;border-radius:0}
+  .txnStack .txnRow + .txnRow::before{content:"";position:absolute;left:92px;right:16px;top:0;height:1px;background:rgba(255,255,255,.08)}
 
-  /* Page positions (2 views) */
-  .pos-0 .views{transform:translateX(0%)}        /* Card */
-  .pos-1 .views{transform:translateX(-50%)}      /* Txn details */
+  .pos-0 .views{transform:translateX(0%)} 
+  .pos-1 .views{transform:translateX(-33.333333%)} 
+  .pos-2 .views{transform:translateX(-66.666666%)}
 
-  /* Transaction details */
   .txnHeader{padding:28px 18px 10px;text-align:center}
   .txnAmount{font-size:60px;font-weight:900;letter-spacing:-.5px}
   .txnMerchant{color:var(--muted);font-size:22px;font-weight:700;margin-top:6px}
   .txnDate{color:var(--muted);font-size:16px;margin-top:4px}
   .block{margin:14px 12px}
-  .row{
-    margin:14px 12px;
-    display:flex;justify-content:space-between;align-items:center;
-    padding:16px;background:var(--tile);border:1px solid var(--tileBorder);
-    border-radius:var(--radiusTile)
-  }
+  .row{margin:14px 12px;display:flex;justify-content:space-between;align-items:center;
+    padding:16px;background:var(--tile);border:1px solid var(--tileBorder);border-radius:var(--radiusTile)}
   .row h3{margin:0;font-size:18px}
   .row .right{font-weight:900;font-size:18px}
   .statusLine{font-size:18px;margin-bottom:4px}
 
-  /* Bottom sheet (shared) */
+  .txnDetailIcon{width:72px;height:72px;border-radius:0px;background:rgba(255,255,255,.80);border:0px solid rgba(255,255,255,.12);
+    display:grid;place-items:center;margin:0 auto 10px}
+  .txnDetailIcon img{width:44px;height:44px;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,.30))}
+
   .sheet{position:fixed;inset:0;display:grid;place-items:end center;pointer-events:none;z-index:9}
   .sheet.active{pointer-events:auto}
   .dim{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity var(--t)}
   .sheet.active .dim{opacity:1}
-  .panel{width:100%;max-width:430px;background:#fff;color:#000;border-radius:20px 20px 0 0;transform:translateY(100%);transition:transform var(--t);box-shadow:0 -20px 40px rgba(0,0,0,.35)}
+  .panel{width:100%;max-width:430px;background:#fff;color:#000;border-radius:20px 20px 0 0;transform:translateY(100%);
+    transition:transform var(--t);box-shadow:0 -20px 40px rgba(0,0,0,.35)}
   .sheet.active .panel{transform:translateY(0)}
   .panelHead{display:flex;align-items:center;justify-content:center;padding:12px 14px 0;position:relative}
   .closeX{position:absolute;left:14px;top:8px;width:36px;height:36px;border-radius:10px;border:none;background:#efefef;font-size:20px;font-weight:900;cursor:pointer}
@@ -156,116 +124,152 @@
   .btn.gray{background:#efefef;color:#000;font-weight:900}
   .other{text-align:center;padding-bottom:20px;color:#007aff;font-weight:900}
 
-  /* Payment success pop-up */
-  .success{position:fixed;inset:0;display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .25s var(--t);z-index:10}
-  .success.active{opacity:1;pointer-events:auto}
-  .success .box{
-    width:86%;max-width:360px;background:#111;color:#fff;border:1px solid rgba(255,255,255,.14);
-    border-radius:18px;box-shadow:var(--shadow);padding:18px 18px 16px;text-align:center
-  }
-  .success .check{
-    width:56px;height:56px;border-radius:50%;margin:2px auto 10px;
-    display:grid;place-items:center;font-weight:900;background:#34c759;color:#000;box-shadow:0 8px 20px rgba(0,0,0,.35)
-  }
-  .success .title{font-weight:900;font-size:20px;margin:6px 0 4px}
-  .success .sub{color:#bbb;font-weight:700}
+  .sheet.dark .panel{background:#111;color:#fff}
+  .sheet.dark .closeX{background:#1f1f1f;color:#fff;border:1px solid #2a2a2a}
+  .sheet.dark .info{color:#dcdcdc}
+  .sheet.dark .info small{color:#9a9a9a}
 
-  /* Card details sheet tiny helper */
-  .cardFields{ padding:6px 12px 20px; }
+  .sheet.success .title,.sheet.success .ringWrap,.sheet.success .info,.sheet.success .actions,.sheet.success .other{display:none}
+  .payReceipt{display:none;color:#fff;text-align:center;padding:14px 16px 28px}
+  .sheet.success .payReceipt{display:block}
+  .payCheck{display:none}
 
-.visa svg, .visa img{
-  width:55px;
-  height:auto;
-  filter:drop-shadow(0 4px 12px rgba(0,0,0,.35));
-}
+  .cardFields{padding:6px 12px 20px}
+  .visa svg, .visa img{width:55px;height:auto;filter:drop-shadow(0 4px 12px rgba(0,0,0,.35))}
+  .bigCard .visa{right:10px;bottom:12px}
 
-.bigCard .visa{
-  right:10px;
-  bottom:12px;
-}
+  .form{padding:8px 14px 18px}
+  .form label{display:block;font-weight:800;margin:12px 0 6px}
+  .form input,.form select{width:100%;padding:12px 12px;border-radius:12px;border:1px solid #d9d9d9;font:inherit}
+  .smallIcon{display:inline-block;vertical-align:-3px;margin-right:8px}
+  .summary{padding:0 14px 14px;color:#1d1d1d;font-weight:700}
+  .summary b{color:#000}
+  .deleteWrap{padding:0 12px 24px}
+  .deleteBtn{width:100%;border:0;border-radius:14px;padding:14px 18px;font-weight:900;background:#ff3b30;color:#fff}
+  .subviews{display:flex;width:200%;transition:transform var(--t)}
+  .page{width:100%}
+  .divider{height:1px;background:#e9e9e9;margin:6px 14px 10px}
+  .subtle{color:#6a6a6a;font-weight:700;margin:0 14px 10px}
+  .hidden{display:none !important}
+  #cardBalTile{padding-bottom:8px} #cardBalTile>:last-child{margin-bottom:0}
 
-/* ===== Add Transaction sheets & inputs ===== */
-.form{padding:8px 14px 18px}
-.form label{display:block;font-weight:800;margin:12px 0 6px}
-.form input,.form select{
-  width:100%;padding:12px 12px;border-radius:12px;border:1px solid #d9d9d9;
-  font:inherit
-}
-.smallIcon{display:inline-block;vertical-align:-3px;margin-right:8px}
-.summary{padding:0 14px 14px;color:#1d1d1d;font-weight:700}
-.summary b{color:#000}
+  :root{ --iconSize:36px; --iconGap:12px; --listPadX:16px; }
+  .txnIcon{width:var(--iconSize);height:var(--iconSize);flex:0 0 var(--iconSize);display:grid;place-items:center;background:transparent;border-radius:0;box-shadow:none}
+  .txnIcon img{width:var(--iconSize);height:var(--iconSize);object-fit:contain;filter:none}
+  .txnStack .txnRow{padding:16px var(--listPadX)}
+  .txnStack .txnRow + .txnRow::before{content:"";position:absolute;top:0;left:calc(var(--listPadX) + var(--iconSize) + var(--iconGap));right:var(--listPadX);height:1px;background:rgba(255,255,255,.08)}
+  .txnDetailIcon{width:auto;height:auto;background:transparent;border:0;border-radius:0;box-shadow:none;margin:0 auto 14px}
+  .txnDetailIcon img{width:72px;height:72px;object-fit:contain;filter:none}
+  .amtWrap{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .cbChip{font-size:12px;line-height:1;padding:3px 6px;border-radius:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14)}
+  #txnsTile{border-radius:6px}
+  .txnStack{border-radius:6px}
 
-/* Delete on txn details */
-.deleteWrap{padding:0 12px 24px}
-.deleteBtn{
-  width:100%;border:0;border-radius:14px;padding:14px 18px;font-weight:900;
-  background:#ff3b30;color:#fff
-}
+  #payPage .content{padding:14px 14px 24px}
+  .payTitle{font-size:24px;font-weight:900;margin:4px 0 10px}
+  .payAmount{font-size:64px;line-height:1;font-weight:900;letter-spacing:-.5px;margin:6px 0 18px}
+  .payBox{display:flex;gap:12px;align-items:center;padding:16px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid var(--tileBorder);cursor:pointer}
+  .payBox .bankIcon{width:36px;height:36px;border-radius:0;background:transparent;display:grid;place-items:center}
+  .payBox .bankIcon img{width:26px;height:26px;object-fit:contain}
+  .payBox .label{font-size:13px;color:var(--muted);margin-bottom:2px}
+  .payBox .name{font-weight:800}
+  .spacer{height:16px}
+  .slideWrap{margin-top:18px;position:relative;height:60px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid var(--tileBorder);user-select:none;overflow:hidden}
+  .slideFill{position:absolute;left:4px;top:4px;bottom:4px;width:0;border-radius:999px;background:linear-gradient(90deg,#51c0ff,#0a84ff);pointer-events:none;transition:width .15s ease}
+  .slideThumb{position:absolute;top:4px;left:4px;width:52px;height:52px;border-radius:999px;background:#0d0d0d;display:grid;place-items:center;font-size:24px;font-weight:900;box-shadow:0 8px 18px rgba(0,0,0,.45);touch-action:none;z-index:2}
+  .slideLabel{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;color:rgba(255,255,255,.6);pointer-events:none;z-index:0}
+  .slideDone{background:#0a84ff}
+  .loadingChip{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:rgba(255,255,255,.09);
+    border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;backdrop-filter:blur(6px)}
+  .spinner{width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Cashback sheet subviews */
-.subviews{display:flex;width:200%;transition:transform var(--t)}
-.page{width:100%}
-.divider{height:1px;background:#e9e9e9;margin:6px 14px 10px}
-.subtle{color:#6a6a6a;font-weight:700;margin:0 14px 10px}
+  .acctRow{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:rgba(255,255,255,.06);border:1px solid var(--tileBorder);margin:10px 14px}
+  .acctRow img{width:28px;height:28px}
+  .acctRow .names{flex:1}
+  .acctRow .names .big{font-weight:800}
+  .acctRow .names .small{color:var(--muted);font-size:12px;margin-top:2px}
+  .acctRow input{accent-color:#0a84ff;transform:scale(1.1)}
 
-/* Hide helper */
-.hidden{display:none !important}
+  /* Slider badge icons (inside ring) */
+  .ringBadge{pointer-events:none}
+  .ringBadge path{filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))}
+  #minDot{cursor:pointer}
+
+  /* Eye toggle in card details */
+  .eyeBtn{background:transparent;border:0;padding:0;margin-left:8px;width:22px;height:22px;cursor:pointer;vertical-align:-3px}
+  .eyeBtn svg{display:block;width:22px;height:22px}
+
+.ringBadge, #badge, #badgeCheck, #badgeStar { display: none !important; }
   
 </style>
+
+<!-- Firebase (compat) -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+<script>
+  window.firebaseConfig = {
+    apiKey: "AIzaSyCVd0ORxpR20e5uq3dzW2_d3zQ50J-PhS4",
+    authDomain: "sapphire-reserve-e3b41.firebaseapp.com",
+    projectId: "sapphire-reserve-e3b41",
+    storageBucket: "sapphire-reserve-e3b41.firebasestorage.app",
+    messagingSenderId: "373486960680",
+    appId: "1:373486960680:web:e0c259af890a4ed7ebb51d"
+  };
+  window.CLOUD_DOC_ID = "sapphire-reserve";
+</script>
 </head>
 <body>
-    
 <div class="app pos-0" id="app">
   <div class="views">
-
-    <!-- Card dashboard (opens by default) -->
+    <!-- HOME -->
     <section class="view" id="card">
       <div class="nav">
-        <h1>AAdvantage Platinum</h1>
+        <h1>Sapphire Reserve</h1>
         <div class="iconrow">
-          <div class="iconbtn" aria-label="Search"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path opacity=".9" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg></div>
-          <div class="iconbtn" id="openAddTxn" aria-label="List"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path opacity=".9" d="M4 4h16v2H4zM4 9h16v2H4zM4 14h11v2H4zM4 19h11v2H4z"/></svg></div>
-          <div class="iconbtn" aria-label="More"><svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></div>
+          <div class="iconbtn" id="openCardDetails" aria-label="Card details">
+            <!-- Card + 123 icon (Apple-style) -->
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+              <line x1="3" y1="9" x2="21" y2="9"></line>
+              <text x="10.8" y="18" font-size="7" font-family="-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,Segoe UI,Roboto,Helvetica,Arial" font-weight="700" fill="#fff">123</text>
+            </svg>
+          </div>
+          <div class="iconbtn" id="openAddTxn" aria-label="List">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><path opacity=".9" d="M4 4h16v2H4zM4 9h16v2H4zM4 14h11v2H4zM4 19h11v2H4z"/></svg>
+          </div>
+          <div class="iconbtn" id="openBalances" aria-label="More">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="#fff"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+          </div>
         </div>
       </div>
 
       <div class="content">
         <div class="bigCard grad1" id="bigCard">
-          <div class="visa">
-            <img src="./my-logo.png" alt="Card Brand">
-          </div>
+          <div class="visa"><img src="./my-logo.png" alt="Card Brand"></div>
         </div>
 
         <div class="grid">
-          <div class="tile compact">
+          <div class="tile compact" id="cardBalTile">
             <div class="kb">Card Balance</div>
             <p class="val" id="cardBalance">$0.00</p>
             <p class="micro" id="availableBalance">$0.00 Available</p>
           </div>
 
-          <!-- EXPANDED Payment Due tile -->
           <div class="tile dueTile dueTall" id="dueTile">
             <p class="dueHeader">Payment Due In</p>
-            <div class="dueVal">
-              <span class="num">1</span>
-              <span class="unit">Month</span>
-            </div>
+            <div class="dueVal"><span class="num">3</span><span class="unit">days</span></div>
             <button class="payBubble" id="openPay">Pay</button>
           </div>
 
-          <!-- Cashback tile (clickable) -->
           <div class="tile compact" id="cashbackTile" style="cursor:pointer">
-            <div class="kb">Cashback</div>
-            <p class="val" id="cashback">$0.00</p>
+            <div class="kb">Cashback</div><p class="val" id="cashback">$0.00</p>
           </div>
 
-          <!-- Savings Account -->
-          <div class="tile full">
-            <div class="kb">Savings Account</div>
-            <div class="val">$756.34</div>
-          </div>
+          <div class="tile full"><div class="kb">Savings Account</div><div class="val">$756.34</div></div>
 
-          <!-- Transactions -->
           <div class="tile full" id="txnsTile">
             <div class="kb" style="margin-bottom:8px">Latest Card Transactions</div>
             <div id="txnList"></div>
@@ -274,50 +278,59 @@
       </div>
     </section>
 
-    <!-- Transaction details -->
+    <!-- TXN DETAIL -->
     <section class="view" id="txnView">
-      <div class="nav">
-        <button class="pill" id="backTxn">Back</button>
-        <div class="iconrow"></div>
-      </div>
-
+      <div class="nav"><button class="pill" id="backTxn">Back</button><div class="iconrow"></div></div>
       <div class="txnHeader">
+        <div class="txnDetailIcon"><img id="txnIcon" src="./payment-icon.png" alt=""></div>
         <div class="txnAmount" id="txnAmount">$0.00</div>
         <div class="txnMerchant" id="txnMerchant">Merchant</div>
         <div class="txnDate" id="txnDate">MM/DD/YY, 0:00 PM</div>
       </div>
-
       <div class="tile block">
         <div class="statusLine" id="txnStatus"><strong>Status: Approved</strong></div>
-        <div class="micro" id="txnCard">AAdvantage Platinum</div>
+        <div class="micro" id="txnCard">Sapphire Reserve</div>
       </div>
-
-      <div class="row">
-        <h3>Total</h3>
-        <div class="right" id="txnTotal">$0.00</div>
-      </div>
-
-      <!-- Cashback earned for purchases only -->
-      <div class="row" id="cashbackRow">
-        <h3>Cashback</h3>
-        <div class="right" id="txnCashback">$0.00</div>
-      </div>
-
-      <!-- Deposited-to row (only for cashback deposit) -->
-      <div class="row hidden" id="depositTargetRow">
-        <h3>Deposited To</h3>
-        <div class="right" id="depositTargetValue">•••• 0000</div>
-      </div>
-
-      <div class="deleteWrap">
-        <button class="deleteBtn" id="deleteTxnBtn">Delete Transaction</button>
-      </div>
+      <div class="row"><h3>Total</h3><div class="right" id="txnTotal">$0.00</div></div>
+      <div class="row" id="cashbackRow"><h3>Cashback</h3><div class="right" id="txnCashback">$0.00</div></div>
+      <div class="row hidden" id="depositTargetRow"><h3>Deposited To</h3><div class="right" id="depositTargetValue">•••• 0000</div></div>
+      <div class="deleteWrap"><button class="deleteBtn" id="deleteTxnBtn">Delete Transaction</button></div>
     </section>
 
+    <!-- PAY CONFIRM -->
+    <section class="view" id="payPage">
+      <div class="nav">
+        <button class="pill" id="payBackBtn">Back</button>
+        <div class="iconrow"><button class="pill" id="payCancelBtn">Cancel</button></div>
+      </div>
+      <div class="content">
+        <div class="payTitle">Pay Card</div>
+        <div class="payAmount" id="payAmountLabel">$0.00</div>
+
+        <div class="kb" style="margin:8px 2px 8px" id="transferLabel">Transfer from</div>
+        <div class="payBox" id="openAcctPicker" aria-label="Choose an account">
+          <div class="bankIcon"><img src="./chase-icon.png" alt=""></div>
+          <div style="flex:1">
+            <div class="label">From</div>
+            <div class="name" id="fromAcctName">Savings •••• 9124</div>
+            <div class="micro">Available</div>
+          </div>
+          <div class="chev">›</div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="slideWrap" id="slideWrap" aria-label="Slide to confirm">
+          <div class="slideFill" id="slideFill"></div>
+          <div class="slideThumb" id="slideThumb">➜</div>
+          <div class="slideLabel" id="slideLabel">Slide to confirm</div>
+        </div>
+      </div>
+    </section>
   </div>
 
   <!-- Payment sheet -->
-  <div class="sheet" id="sheet">
+  <div class="sheet dark" id="sheet">
     <div class="dim" id="dim"></div>
     <div class="panel">
       <div class="panelHead"><button class="closeX" id="closeSheet" aria-label="Close">×</button></div>
@@ -326,43 +339,64 @@
       <div class="ringWrap" id="ringWrap">
         <svg viewBox="0 0 320 320" id="ringSvg" aria-hidden="true">
           <defs>
-            <linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#51c0ff"/><stop offset="100%" stop-color="#0a84ff"/></linearGradient>
-            <linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#b8ffb9"/><stop offset="100%" stop-color="#34c759"/></linearGradient>
-            <linearGradient id="gradGray"  x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#e9ecef"/><stop offset="100%" stop-color="#cfd8dc"/></linearGradient>
+            <!-- nicer gradients -->
+            <linearGradient id="gradBlue" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#51c0ff"/><stop offset="100%" stop-color="#0a84ff"/>
+            </linearGradient>
+            <linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#8ef6a2"/><stop offset="100%" stop-color="#34c759"/>
+            </linearGradient>
+            <linearGradient id="gradYellow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#ffe07a"/><stop offset="100%" stop-color="#ffb400"/>
+            </linearGradient>
           </defs>
-          <circle cx="160" cy="160" r="120" stroke="#e9e9ef" stroke-opacity=".65" stroke-width="26" fill="none"/>
-          <circle id="progress" cx="160" cy="160" r="120" stroke="url(#gradGray)" stroke-width="26" fill="none"
-                  stroke-linecap="round" transform="rotate(-90 160 160)" />
-          <circle id="handle" cx="160" cy="40" r="12" fill="#fff" stroke="#e6e6e6" stroke-width="2"/>
-        </svg>
 
-        <div class="centerText" aria-live="polite" aria-atomic="true">
-          <div class="amt" id="amountLabel">$0.00</div>
-        </div>
+          <!-- track -->
+          <circle cx="160" cy="160" r="120" stroke="#e0e0e5" stroke-opacity=".55" stroke-width="26" fill="none"/>
+          <!-- progress -->
+          <circle id="progress" cx="160" cy="160" r="120" stroke="url(#gradGreen)" stroke-width="26" fill="none"
+                  stroke-linecap="round" transform="rotate(-90 160 160)" />
+          <!-- min dot (bigger, plain) -->
+          <circle id="minDot" r="9" fill="#ffb400" stroke="#995f00" stroke-width="3" style="display:none" />
+
+          <!-- handle -->
+          <circle id="handle" cx="160" cy="40" r="12" fill="#fff" stroke="#e6e6e6" stroke-width="2"/>
+
+          <!-- state icons on inner ring (topmost) -->
+          <g id="badge" class="ringBadge" style="display:none">
+            <!-- green check -->
+            <g id="badgeCheck" style="display:none">
+              <path d="M2 8 L7 13 L16 4" stroke="#34c759" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <path d="M2 8 L7 13 L16 4" stroke="#fff" stroke-width="5.8" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".25"/>
+            </g>
+            <!-- blue star -->
+            <g id="badgeStar" style="display:none">
+              <path d="M9.5 1.5l2.2 4.5 5 .7-3.6 3.5.9 5-4.5-2.3-4.5 2.3.9-5L2.3 6.7l5-.7z"
+                    fill="url(#gradBlue)" stroke="#fff" stroke-width="1" />
+            </g>
+          </g>
+        </svg>
+        <div class="centerText" aria-live="polite" aria-atomic="true"><div class="amt" id="amountLabel">$0.00</div></div>
       </div>
 
       <div class="info" id="payInfo">
-        Pay June Balance
-        <small>Paying your monthly balance is recommended to help keep you financially healthy and avoid interest charges.</small>
+        Pay Card Balance
+        <small>Paying the total amount you’ve spent is a great way to clear your balance.</small>
       </div>
 
-      <div class="actions">
-        <button class="btn primary" id="payNowBtn">Pay $0.00</button>
-      </div>
+      <div class="actions"><button class="btn primary" id="payNowBtn">Pay $0.00</button></div>
       <div class="other" id="otherAmountBtn">Other Amount</div>
     </div>
   </div>
 
-  <!-- Cashback deposit sheet (2-step inside same pop-up) -->
-  <div class="sheet" id="cashbackSheet" aria-hidden="true">
+  <!-- Cashback sheet -->
+  <div class="sheet dark" id="cashbackSheet" aria-hidden="true">
     <div class="dim" id="cbDim"></div>
     <div class="panel">
       <div class="subviews" id="cbViews">
-        <!-- Step 1: Pick amount -->
         <div class="page">
           <div class="panelHead"><button class="closeX" id="cbClose1" aria-label="Close">×</button></div>
           <div class="title">Choose amount to deposit</div>
-
           <div class="ringWrap" id="cbRingWrap">
             <svg viewBox="0 0 320 320" id="cbRingSvg" aria-hidden="true">
               <defs>
@@ -374,315 +408,371 @@
                       stroke-linecap="round" transform="rotate(-90 160 160)" />
               <circle id="cbHandle" cx="160" cy="40" r="12" fill="#fff" stroke="#e6e6e6" stroke-width="2"/>
             </svg>
-
-            <div class="centerText" aria-live="polite" aria-atomic="true">
-              <div class="amt" id="cbAmountLabel">$0.00</div>
-            </div>
+            <div class="centerText"><div class="amt" id="cbAmountLabel">$0.00</div></div>
           </div>
-
-          <div class="info">
-            Choose amount to deposit
-            <small>Choose amount of cashback to deposit.</small>
-          </div>
-
-          <div class="actions">
-            <button class="btn primary" id="cbDepositBtn" disabled>Deposit $0.00</button>
-          </div>
+          <div class="info">Choose amount to deposit<small>Choose amount of cashback to deposit.</small></div>
+          <div class="actions"><button class="btn primary" id="cbDepositBtn" disabled>Deposit $0.00</button></div>
         </div>
-
-        <!-- Step 2: Deposit details -->
         <div class="page">
           <div class="panelHead"><button class="closeX" id="cbClose2" aria-label="Close">×</button></div>
           <div class="title">Deposit</div>
           <div class="divider"></div>
           <p class="subtle">Deposit via ACH</p>
           <div class="form" style="padding-top:0">
-            <label>Account Number</label>
-            <input id="cbAcct" inputmode="numeric" placeholder="0000000000" />
-            <label>Routing Number</label>
-            <input id="cbRouting" inputmode="numeric" placeholder="000000000" />
+            <label>Account Number</label><input id="cbAcct" inputmode="numeric" placeholder="0000000000" />
+            <label>Routing Number</label><input id="cbRouting" inputmode="numeric" placeholder="000000000" />
           </div>
-          <div class="actions" style="gap:10px">
-            <button class="btn green" id="cbSubmit">Deposit</button>
-            <button class="btn gray" id="cbCancel">Cancel</button>
-          </div>
+          <div class="actions" style="gap:10px"><button class="btn green" id="cbSubmit">Deposit</button><button class="btn gray" id="cbCancel">Cancel</button></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Success popup -->
-  <div class="success" id="paySuccess" aria-live="polite" aria-atomic="true">
-    <div class="box">
-      <div class="check">✓</div>
-      <div class="title">Payment Successful</div>
-      <div class="sub" id="paySuccessMsg">$0.00 has been applied to your card.</div>
-    </div>
-  </div>
-
-  <!-- Card details sheet -->
+  <!-- Card details -->
   <div class="sheet" id="cardSheet" aria-hidden="true">
     <div class="dim" id="cardDim"></div>
     <div class="panel">
-      <div class="panelHead">
-        <button class="closeX" id="closeCardSheet" aria-label="Close">×</button>
-      </div>
+      <div class="panelHead"><button class="closeX" id="closeCardSheet" aria-label="Close">×</button></div>
       <div class="title">Card Details</div>
       <div class="cardFields">
-        <div class="row">
-          <h3>Card Number</h3>
-          <div class="right" id="cdNumber">0000 0000 0000 0000</div>
-        </div>
-        <div class="row">
-          <h3>Expiry</h3>
-          <div class="right" id="cdExpiry">MM/YY</div>
-        </div>
+        <div class="row"><h3>Card Number</h3><div class="right" id="cdNumber">0000 0000 0000 0000</div></div>
+        <div class="row"><h3>Expiry</h3><div class="right" id="cdExpiry">MM/YY</div></div>
         <div class="row">
           <h3>Security Code</h3>
-          <div class="right" id="cdCvv">000</div>
+          <div class="right" id="cdCvvArea">
+            <span id="cdCvvMasked">•••</span>
+            <span id="cdCvvActual" class="hidden">000</span>
+            <button class="eyeBtn" id="cvvEye" aria-label="Show security code">
+              <svg viewBox="0 0 24 24" width="22" height="22">
+                <g id="eyeOpen">
+                  <path d="M1.5 12s4-6.5 10.5-6.5S22.5 12 22.5 12s-4 6.5-10.5 6.5S1.5 12 1.5 12Z" fill="none" stroke="#000" stroke-width="2"/>
+                  <circle cx="12" cy="12" r="3" fill="none" stroke="#000" stroke-width="2"/>
+                </g>
+                <g id="eyeClosed" style="display:none">
+                  <path d="M3 3l18 18" stroke="#000" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M1.5 12s4-6.5 10.5-6.5S22.5 12 22.5 12s-4 6.5-10.5 6.5S1.5 12 1.5 12Z" fill="none" stroke="#000" stroke-width="2"/>
+                </g>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Add Transaction sheet -->
+  <!-- Add / Confirm Txn -->
   <div class="sheet" id="addTxnSheet" aria-hidden="true">
     <div class="dim" id="addTxnDim"></div>
     <div class="panel">
       <div class="panelHead"><button class="closeX" id="closeAddTxn" aria-label="Close">×</button></div>
       <div class="title">Add Transaction</div>
       <div class="form">
-        <label for="txMerchant">Merchant</label>
-        <input id="txMerchant" type="text" placeholder="e.g., Starbucks" />
-
-        <label for="txAmount">Amount</label>
-        <input id="txAmount" type="number" step="0.01" inputmode="decimal" placeholder="0.00" />
-
-        <label for="txWhen">Date &amp; Time</label>
-        <input id="txWhen" type="datetime-local" />
-
+        <label for="txMerchant">Merchant</label><input id="txMerchant" type="text" placeholder="e.g., Starbucks" />
+        <label for="txAmount">Amount</label><input id="txAmount" type="number" step="0.01" inputmode="decimal" placeholder="0.00" />
+        <label for="txWhen">Date &amp; Time</label><input id="txWhen" type="datetime-local" />
         <label for="txStatus">Status</label>
-        <select id="txStatus">
-          <option>Approved</option>
-          <option>Refunded</option>
-          <option>Posted</option>
+        <select id="txStatus"><option>Approved</option><option>Refunded</option><option>Posted</option></select>
+        <label for="txCategory">Category</label>
+        <select id="txCategory">
+          <option value="food">Food/Drinks</option>
+          <option value="gaming">Gaming</option>
+          <option value="streaming">Streaming</option>
+          <option value="travel">Travel</option>
+          <option value="messaging">Messaging</option>
+          <option value="shopping">Shopping</option>
+          <option value="payment">Payment</option>
         </select>
       </div>
-      <div class="actions">
-        <button class="btn" style="background:#34c759;color:#000;font-weight:900" id="txContinue">
-          <span class="smallIcon">✔︎</span>Continue
-        </button>
-      </div>
+      <div class="actions"><button class="btn" style="background:#34c759;color:#000;font-weight:900" id="txContinue"><span class="smallIcon">✔︎</span>Continue</button></div>
       <div class="other" id="txCancelFromForm">Cancel</div>
     </div>
   </div>
 
-  <!-- Confirm Transaction sheet -->
   <div class="sheet" id="confirmTxnSheet" aria-hidden="true">
     <div class="dim" id="confirmDim"></div>
     <div class="panel">
       <div class="panelHead"><button class="closeX" id="closeConfirm" aria-label="Close">×</button></div>
       <div class="title">Confirm Transaction</div>
       <div class="summary" id="confirmSummary"></div>
-      <div class="actions">
-        <button class="btn primary" id="confirmAddBtn">Add Transaction</button>
-      </div>
+      <div class="actions"><button class="btn primary" id="confirmAddBtn">Add Transaction</button></div>
       <div class="other" id="editTxnBtn">Go Back &amp; Edit</div>
     </div>
   </div>
 
+  <!-- Update Balances -->
+  <div class="sheet" id="balancesSheet" aria-hidden="true">
+    <div class="dim" id="balancesDim"></div>
+    <div class="panel">
+      <div class="panelHead"><button class="closeX" id="closeBalances" aria-label="Close">×</button></div>
+      <div class="title">Update Balances</div>
+      <div class="form">
+        <label for="editCardBalance">Card Balance</label>
+        <input id="editCardBalance" type="number" step="0.01" inputmode="decimal" placeholder="0.00" />
+        <label for="editAvailableBalance">Available</label>
+        <input id="editAvailableBalance" type="number" step="0.01" inputmode="decimal" placeholder="0.00" />
+        <label for="editCashback">Cashback</label>
+        <input id="editCashback" type="number" step="0.01" inputmode="decimal" placeholder="0.00" />
+      </div>
+      <div class="actions" style="gap:10px">
+        <button class="btn green" id="balancesSaveBtn">Save</button>
+        <button class="btn gray" id="balancesCancelBtn">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account picker -->
+  <div class="sheet dark" id="acctSheet" aria-hidden="true">
+    <div class="dim" id="acctDim"></div>
+    <div class="panel">
+      <div class="panelHead"><button class="closeX" id="acctClose" aria-label="Close">×</button></div>
+      <div class="title">Choose an account</div>
+      <div id="acctList">
+        <label class="acctRow">
+          <input type="radio" name="acct" value="Savings •••• 9124" checked />
+          <img src="./chase-icon.png" alt="">
+          <div class="names"><div class="big">Savings •••• 9124</div><div class="small">Available</div></div>
+        </label>
+        <label class="acctRow">
+          <input type="radio" name="acct" value="Checking •••• 2143" />
+          <img src="./chase-icon.png" alt="">
+          <div class="names"><div class="big">Checking •••• 2143</div><div class="small">Available</div></div>
+        </label>
+        <label class="acctRow">
+          <input type="radio" name="acct" value="TOTAL CHECKING (••• 6750)" />
+          <img src="./chase-icon.png" alt="">
+          <div class="names"><div class="big">TOTAL CHECKING (…6750)</div><div class="small">Available</div></div>
+        </label>
+      </div>
+      <div class="actions" style="gap:10px"><button class="btn primary" id="acctSave">Save</button></div>
+    </div>
+  </div>
 </div>
 
 <script>
-  
 (()=> {
+  /* Firebase helpers */
+  let cloudSaveDebounced = ()=>{};
+  async function fbInit(){
+    try{
+      if(!window.firebaseConfig || !firebase?.initializeApp) return null;
+      if(!firebase.apps.length){ firebase.initializeApp(window.firebaseConfig); }
+      try{ await firebase.auth().signInAnonymously(); }catch(e){}
+      const db=firebase.firestore();
+      try{ await db.enablePersistence({synchronizeTabs:true}); }catch(e){}
+      window.db=db; return db;
+    }catch(e){ return null; }
+  }
+  async function cloudDocRef(){
+    if(!window.db) return null;
+    let id=(window.CLOUD_DOC_ID && String(window.CLOUD_DOC_ID).trim()) || "";
+    try{ if(!firebase.auth().currentUser) await firebase.auth().signInAnonymously(); }catch(e){}
+    if(!id) id = firebase.auth().currentUser?.uid || "";
+    if(!id) return null;
+    window.CLOUD_DOC_PATH=`wallet/${id}`;
+    return window.db.doc(window.CLOUD_DOC_PATH);
+  }
+  async function cloudLoad(){
+    const ref=await cloudDocRef(); if(!ref) return;
+    const snap=await ref.get();
+    if(snap.exists){
+      const data=snap.data()||{};
+      if(data.settings){ SETTINGS={...SETTINGS, ...data.settings, version: SETTINGS.version}; saveBalances(); applyBalances(); }
+      if(Array.isArray(data.transactions)){ transactions=data.transactions.slice(); saveTransactions(); renderTransactions(); refreshCashbackTile(); }
+    }else{
+      await ref.set({ settings: SETTINGS, transactions: transactions, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    }
+  }
+  async function cloudSave(){
+    try{
+      const ref=await cloudDocRef(); if(!ref) return;
+      await ref.set({ settings: SETTINGS, transactions: transactions, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, {merge:true});
+    }catch(e){}
+  }
+  function debounce(fn,ms){let t;return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);} }
+  cloudSaveDebounced = debounce(cloudSave, 600);
+
+  /* App setup */
   const app=document.getElementById('app');
-
-  // ---- LocalStorage namespace for THIS card ----
-  const CARD_NS = 'aa_platinum';
-  const LS_KEYS = {
-    BALANCES: `${CARD_NS}:balances`,
-    TXNS:     `${CARD_NS}:txns`,
-    CBV:      `${CARD_NS}:cbv_current`
-  };
-
-  // Transaction details nav
   document.getElementById('backTxn').addEventListener('click', ()=>{ app.className='app pos-0'; });
 
-  /* === MANUAL DEFAULTS (edit; values persist via localStorage) === */
-  const SETTINGS_DEFAULT = {
-    version: 9,                 // bump if you want to reset persisted balances
-    cardBalance: 0.00,
-    availableBalance: 325.00,
-    cashback: 0.00,             // dashboard Cashback tile (auto from transactions)
-    cardNumber: '5042 1902 7823 8126',
-    cardExpiry: '07/30',
-    cardCvv: '872'
-  };
+  const SETTINGS_DEFAULT = {version:10,cardBalance:68.25,availableBalance:256.75,cashback:6.94,
+    cardNumber:'5402 1694 6892 8126',cardExpiry:'07/30',cardCvv:'792'};
 
   function loadBalances(){
     try{
-      const raw = localStorage.getItem(LS_KEYS.BALANCES);
-      if(!raw) return {...SETTINGS_DEFAULT};
-      const s = JSON.parse(raw);
-      if (typeof s.cardBalance==='number' && typeof s.availableBalance==='number' &&
-          s.version === SETTINGS_DEFAULT.version){
-        return {...SETTINGS_DEFAULT, ...s};
+      const raw = localStorage.getItem('aa_balances');
+      if(raw){
+        const s = JSON.parse(raw);
+        return {...SETTINGS_DEFAULT, ...s,
+          cardBalance: isFinite(+s.cardBalance) ? +s.cardBalance : SETTINGS_DEFAULT.cardBalance,
+          availableBalance: isFinite(+s.availableBalance) ? +s.availableBalance : SETTINGS_DEFAULT.availableBalance,
+          cashback: isFinite(+s.cashback) ? +s.cashback : SETTINGS_DEFAULT.cashback,
+          version: SETTINGS_DEFAULT.version };
       }
     }catch(e){}
     return {...SETTINGS_DEFAULT};
   }
-  let SETTINGS = loadBalances();
-  const saveBalances = () => localStorage.setItem(LS_KEYS.BALANCES, JSON.stringify(SETTINGS));
+  let SETTINGS=loadBalances();
+  const saveBalances=()=>{ localStorage.setItem('aa_balances',JSON.stringify(SETTINGS)); cloudSaveDebounced(); };
 
-  // === Cross-app ledger event emitter (same-origin) ===
-const LEDGER_CHANNEL_NAME = 'ledger';
-const LEDGER_LOG_KEY = 'global_event_log';
+  const CASHBACK_VERSION=2, CBV_KEY='aa_cbv_current';
+  const ensureCbv=()=>{const stored=Number(localStorage.getItem(CBV_KEY)||'0');if(stored!==CASHBACK_VERSION){localStorage.setItem(CBV_KEY,String(CASHBACK_VERSION))}return CASHBACK_VERSION};
+  const currentCbv=()=>Number(localStorage.getItem(CBV_KEY)||ensureCbv()); ensureCbv();
 
-function emitLedgerEvent(evt) {
-  try {
-    // 1) live broadcast to any open tabs/apps
-    const ch = new BroadcastChannel(LEDGER_CHANNEL_NAME);
-    ch.postMessage(evt);
-    ch.close?.();
+  /* Payment sheet + slider */
+  const sheet=document.getElementById('sheet'), dim=document.getElementById('dim'),
+        openPay=document.getElementById('openPay'), closeSheetBtn=document.getElementById('closeSheet');
+  const closeSheet=()=>{ sheet.classList.remove('active'); };
 
-    // 2) persist so apps opened later can replay
-    const log = JSON.parse(localStorage.getItem(LEDGER_LOG_KEY) || '[]');
-    log.push(evt);
-    localStorage.setItem(LEDGER_LOG_KEY, JSON.stringify(log));
-  } catch (e) {
-    // no-op for demo
-  }
-}
-
-  // === Cashback version gate (bump to reset tile & slider without deleting txns) ===
-const CASHBACK_VERSION = 2;                 // <— bump this to 2, 3, ... to start fresh
-const CBV_KEY = LS_KEYS.CBV;
-const ensureCbv = () => {
-  const stored = Number(localStorage.getItem(CBV_KEY) || '0');
-  if (stored !== CASHBACK_VERSION) {
-    localStorage.setItem(CBV_KEY, String(CASHBACK_VERSION));
-  }
-  return CASHBACK_VERSION;
-};
-const currentCbv = () => Number(localStorage.getItem(CBV_KEY) || ensureCbv());
-ensureCbv();
-
-  /* ----- Payment sheet open/close ----- */
-  const sheet=document.getElementById('sheet');
-  const dim=document.getElementById('dim');
-  const openPay=document.getElementById('openPay');
-  const closeSheet=()=>sheet.classList.remove('active');
-  openPay.addEventListener('click',()=>sheet.classList.add('active'));
-  dim.addEventListener('click',closeSheet);
-  document.getElementById('closeSheet').addEventListener('click',closeSheet);
+  openPay.addEventListener('click',()=>{
+    sheet.classList.add('active');
+    MAX = Math.max(0, SETTINGS.cardBalance);
+    minDue = MAX>0 ? Math.min(40, MAX) : 0;
+    lockedAtMax=false; lockedAtMin=false; lastFrac=0;
+    showAndPlaceMinDot();
+    // start at minimum payment
+    if (MAX>0){ applyFromFraction(minDue / Math.max(1,MAX), false); }
+  });
+  dim.addEventListener('click',closeSheet); closeSheetBtn.addEventListener('click',closeSheet);
   document.addEventListener('keydown',e=>{if(e.key==='Escape') closeSheet()});
 
-  /* ----- Circular slider (locks at max; clockwise disabled when locked) ----- */
-  const MIN = 0.00;
-  let   MAX = SETTINGS.cardBalance;
-  let   THRESH = +(MAX * 0.82).toFixed(2);
-
-  const ringWrap=document.getElementById('ringWrap');
-  const ringSvg=document.getElementById('ringSvg');
-  const progress=document.getElementById('progress');
-  const handle=document.getElementById('handle');
-  const amountLabel=document.getElementById('amountLabel');
-  const payBtn=document.getElementById('payNowBtn');
-  const info=document.getElementById('payInfo');
-
-  const R=120;
-  const C=2*Math.PI*R;
-  progress.setAttribute('stroke-dasharray', `${C}`);
-  progress.setAttribute('stroke-dashoffset', `${C}`);
-
-  let amount=MIN;
-  let dragging=false, lastFrac=0, lockedAtMax=false;
+  const MIN=0.00; let MAX=SETTINGS.cardBalance; let THRESH=+(MAX*0.82).toFixed(2);
+  const ringWrap=document.getElementById('ringWrap'), ringSvg=document.getElementById('ringSvg'),
+        progress=document.getElementById('progress'), handle=document.getElementById('handle'),
+        amountLabel=document.getElementById('amountLabel'), payBtn=document.getElementById('payNowBtn'),
+        info=document.getElementById('payInfo'),
+        minDot=document.getElementById('minDot'),
+        badge=document.getElementById('badge'), badgeCheck=document.getElementById('badgeCheck'), badgeStar=document.getElementById('badgeStar');
+  const R=120, C=2*Math.PI*R; progress.setAttribute('stroke-dasharray',`${C}`); progress.setAttribute('stroke-dashoffset',`${C}`);
+  const BADGE = {
+    box: 18,
+    inset: -8,
+    deg: 0,
+    nudgeCheck: { x: -1, y: 1 },
+    nudgeStar: { x: 0, y: -1 }
+  };
+  let amount=MIN, dragging=false, lastFrac=0, lockedAtMax=false, lockedAtMin=false, minDue=40;
 
   function setUI(v){
-    if(lockedAtMax || Math.abs(v-MAX)<0.01){
+    const atMax = (lockedAtMax||Math.abs(v-MAX)<0.01);
+    const belowMin = v < minDue - 0.005;
+    const reachedMin = !belowMin && !atMax;
+    if(atMax){
       progress.setAttribute('stroke','url(#gradBlue)');
       info.innerHTML='Pay Card Balance<small>Paying the total amount you’ve spent is a great way to clear your balance and stay ahead on your finances.</small>';
-    }else if(v>THRESH){
+    }else if(reachedMin){
       progress.setAttribute('stroke','url(#gradGreen)');
-      info.innerHTML='Pay More Toward Your Balance<small>Paying more of your card balance helps free up available credit and reduces the amount to pay next month.</small>';
+      info.innerHTML='Pay More Toward Your Balance<small>Paying more reduces what you’ll owe next month and frees up credit.</small>';
     }else{
-      progress.setAttribute('stroke','url(#gradGray)');
-      info.innerHTML='Pay June Balance<small>Paying your monthly balance is recommended to help keep you financially healthy and avoid interest charges.</small>';
+      progress.setAttribute('stroke','url(#gradYellow)');
+      info.innerHTML='Pay Minimum Amount<small>Pay at least the minimum to keep your account in good standing.</small>';
+    }
+    // badge visibility & type
+    if (atMax){
+      showBadge('star');
+    }else if(!belowMin){
+      showBadge('check');
+    }else{
+      hideBadge();
     }
   }
 
-  const signedDelta = (a,b)=>(((a-b)+1.5)%1)-0.5;
+  function showBadge(kind){
+    badge.style.display='block';
+    badgeCheck.style.display = (kind==='check')?'block':'none';
+    badgeStar.style.display  = (kind==='star') ?'block':'none';
+  }
+  function hideBadge(){ badge.style.display='none'; }
 
-  function applyFromFraction(fracRaw, fromDrag=false){
-    let f = Math.max(0, Math.min(0.999999, fracRaw));
-    const delta = signedDelta(f, lastFrac);
+  function placeBadge(/* frac is ignored on purpose */){
+  // Keep the badge fixed at the center of the ring
+  const CENTER = 160;                // viewBox center for 320×320 SVG
+  const b = (BADGE.box || 18);       // icon box size
+  const usingStar = (badgeStar.style.display !== 'none');
+  const n = usingStar ? BADGE.nudgeStar : BADGE.nudgeCheck;
 
-    if (lockedAtMax){
-      if (delta > 0){
-        f = 1;
-      }else{
-        lockedAtMax = false;
+  // Optional tiny nudges if you want to fine-tune position
+  const OFFSET_X = 0;  // negative = left,  positive = right
+  const OFFSET_Y = 0;  // negative = up,    positive = down
+
+  const px = CENTER - b/2 + (n?.x || 0) + OFFSET_X;
+  const py = CENTER - b/2 + (n?.y || 0) + OFFSET_Y;
+
+  // (optional) uncomment for a quick snap animation
+  // badge.style.transition = 'transform 140ms ease';
+
+  badge.setAttribute('transform', `translate(${px.toFixed(2)}, ${py.toFixed(2)})`);
+}
+
+
+
+
+  function signedDelta(a,b){ return (((a-b)+1.5)%1)-0.5; }
+
+  function applyFromFraction(fracRaw,fromDrag=false){
+    let f=Math.max(0,Math.min(0.999999,fracRaw));
+    const delta=signedDelta(f,lastFrac);
+
+    // lock-at-max behaviour
+    if(lockedAtMax){ if(delta>0){f=1}else{lockedAtMax=false} }
+    const NEAR_MAX=0.995; if(!lockedAtMax&&f>=NEAR_MAX){lockedAtMax=true;f=1}
+
+    // min-dot snapping
+    const showMin = (MAX>=40); // dot only when balance >= 40
+    const minFrac = (MAX>0)?(minDue/MAX):0;
+    if(showMin){
+      const EPS = 0.015;
+      if(lockedAtMin){
+        if(Math.abs(f-minFrac)>EPS*2){ lockedAtMin=false; } else { f=minFrac; }
+      }else if(fromDrag && Math.abs(f-minFrac)<=EPS){
+        f=minFrac; lockedAtMin=true;
       }
     }
 
-    const NEAR_MAX = 0.995;
-    if (!lockedAtMax && f >= NEAR_MAX){
-      lockedAtMax = true;
-      f = 1;
-    }
+    lastFrac=f;
+    const fracForAmount=(f===1)?1:f;
+    amount=+((MIN+fracForAmount*(MAX-MIN)).toFixed(2));
 
-    lastFrac = f;
-    const fracForAmount = (f===1)?1:f;
-    amount = +((MIN + fracForAmount*(MAX-MIN)).toFixed(2));
+    // draw ring and handle
+    const dash=C*(1-fracForAmount); progress.style.transition=fromDrag?'none':'stroke-dashoffset 220ms ease, stroke 220ms ease';
+    progress.setAttribute('stroke-dashoffset',`${dash}`);
+    const ang=(-90+360*fracForAmount)*Math.PI/180; const hx=160+R*Math.cos(ang), hy=160+R*Math.sin(ang);
+    handle.style.transition=fromDrag?'none':'cx 180ms ease, cy 180ms ease'; handle.setAttribute('cx',hx.toFixed(2)); handle.setAttribute('cy',hy.toFixed(2));
+    amountLabel.textContent='$'+amount.toFixed(2); payBtn.textContent='Pay $'+amount.toFixed(2);
 
-    const dash = C*(1-fracForAmount);
-    progress.style.transition = fromDrag ? 'none' : 'stroke-dashoffset 220ms ease, stroke 220ms ease';
-    progress.setAttribute('stroke-dashoffset', `${dash}`);
-
-    const ang=(-90 + 360*fracForAmount)*Math.PI/180;
-    const hx=160 + R*Math.cos(ang), hy=160 + R*Math.sin(ang);
-    handle.style.transition = fromDrag ? 'none' : 'cx 180ms ease, cy 180ms ease';
-    handle.setAttribute('cx',hx.toFixed(2));
-    handle.setAttribute('cy',hy.toFixed(2));
-
-    amountLabel.textContent='$'+amount.toFixed(2);
-    payBtn.textContent='Pay $'+amount.toFixed(2);
+    // badge placement on same angle
+    placeBadge(fracForAmount);
     setUI(amount);
   }
 
-  const cardBalanceEl = document.getElementById('cardBalance');
-  const availableEl   = document.getElementById('availableBalance');
-  const cashbackEl    = document.getElementById('cashback');
-  const fmtUSD = n => n.toLocaleString(undefined,{style:'currency',currency:'USD'});
-
-  function applyBalances(){
-    cardBalanceEl.textContent = fmtUSD(SETTINGS.cardBalance);
-    availableEl.textContent   = `${fmtUSD(SETTINGS.availableBalance)} Available`;
-    if (cashbackEl) cashbackEl.textContent = fmtUSD(SETTINGS.cashback);
-
-    MAX    = Math.max(0, SETTINGS.cardBalance);
-    THRESH = +(MAX * 0.82).toFixed(2);
-    lockedAtMax = false;
-    lastFrac = 0;
-    applyFromFraction(0, false);
+  // min dot position + click
+  function showAndPlaceMinDot(){
+    const show = (MAX>=40);
+    if(!show){ minDot.style.display='none'; return; }
+    const minFrac = (minDue/MAX);
+    const ang=(-90+360*minFrac)*Math.PI/180; const rx=160+R*Math.cos(ang), ry=160+R*Math.sin(ang);
+    minDot.style.display='block';
+    minDot.setAttribute('cx',rx.toFixed(2));
+    minDot.setAttribute('cy',ry.toFixed(2));
   }
+  minDot.addEventListener('click', ()=>{
+    if(MAX<40) return;
+    const f=minDue/Math.max(1,MAX);
+    lockedAtMin=true;
+    applyFromFraction(f,false);
+  });
 
+  // pointer mapping
   function fractionFromPointer(evt){
     const rect=ringWrap.getBoundingClientRect();
     const x=(evt.touches?evt.touches[0].clientX:evt.clientX)-rect.left;
     const y=(evt.touches?evt.touches[0].clientY:evt.clientY)-rect.top;
-    const cx=rect.width/2, cy=rect.height/2;
-    let theta=Math.atan2(y-cy,x-cx);
-    theta+=Math.PI/2;
-    if(theta<0) theta+=Math.PI*2;
+    const cx=rect.width/2, cy=rect.height/2; let theta=Math.atan2(y-cy,x-cx); theta+=Math.PI/2; if(theta<0) theta+=Math.PI*2;
     return theta/(Math.PI*2);
   }
-
-  const start=e=>{dragging=true; applyFromFraction(fractionFromPointer(e), true); e.preventDefault();}
-  const move =e=>{if(!dragging) return; applyFromFraction(fractionFromPointer(e), true);}
-  const end  =()=>{dragging=false;}
-
+  const start=e=>{dragging=true;applyFromFraction(fractionFromPointer(e),true);e.preventDefault()}
+  const move=e=>{if(!dragging)return;applyFromFraction(fractionFromPointer(e),true)}
+  const end=()=>{dragging=false}
   handle.addEventListener('mousedown',start); handle.addEventListener('touchstart',start,{passive:false});
   ringSvg.addEventListener('mousedown',start); ringSvg.addEventListener('touchstart',start,{passive:false});
   window.addEventListener('mousemove',move,{passive:false}); window.addEventListener('touchmove',move,{passive:false});
@@ -690,483 +780,484 @@ ensureCbv();
 
   document.getElementById('otherAmountBtn').addEventListener('click',()=>{
     const raw=prompt('Enter a payment amount (0.00–'+MAX.toFixed(2)+')', amount.toFixed(2));
-    if(!raw) return; const n=parseFloat(raw.replace(/[^\d.]/g,'')); if(isFinite(n)) {
-      const frac = Math.max(0, Math.min(1, n/MAX));
-      applyFromFraction(frac,false);
-    }
+    if(!raw) return; const n=parseFloat(raw.replace(/[^\d.]/g,'')); if(isFinite(n)){applyFromFraction(Math.max(0,Math.min(1,n/Math.max(1,MAX))),false)}
   });
 
-  // SUCCESS POPUP
-  const successEl = document.getElementById('paySuccess');
-  const successMsg = document.getElementById('paySuccessMsg');
-  function showPaySuccess(n){
-    successMsg.textContent = `${fmtUSD(n)} has been applied to your card.`;
-    successEl.classList.add('active');
-    const hide = ()=>successEl.classList.remove('active');
-    successEl.addEventListener('click', hide, {once:true});
-    setTimeout(hide, 1600);
+  const cardBalanceEl=document.getElementById('cardBalance'), availableEl=document.getElementById('availableBalance'),
+        cashbackEl=document.getElementById('cashback'); const fmtUSD=n=>n.toLocaleString(undefined,{style:'currency',currency:'USD'});
+  function applyBalances(){
+    cardBalanceEl.textContent=fmtUSD(SETTINGS.cardBalance); availableEl.textContent=`${fmtUSD(SETTINGS.availableBalance)} Available`;
+    if(cashbackEl) cashbackEl.textContent=fmtUSD(SETTINGS.cashback);
+    MAX=Math.max(0,SETTINGS.cardBalance); THRESH=+(MAX*0.82).toFixed(2); lockedAtMax=false; lockedAtMin=false; lastFrac=0;
+    minDue = MAX>0 ? Math.min(40, MAX) : 0;
+    applyFromFraction(Math.min(1, (minDue||0)/Math.max(1,MAX)), false);
+    showAndPlaceMinDot();
   }
 
-  /* ===================== BALANCE ADJUST HELPERS ===================== */
-  function applyBalanceDelta(cardDelta, availDelta){
-    const nextCard = +(SETTINGS.cardBalance + cardDelta).toFixed(2);
-    SETTINGS.cardBalance = nextCard < 0 ? 0 : nextCard; // never below 0
-    SETTINGS.availableBalance = +(SETTINGS.availableBalance + availDelta).toFixed(2);
-    saveBalances();
-    applyBalances();
+  function applyBalanceDelta(cardDelta,availDelta){
+    const nextCard=+(SETTINGS.cardBalance+cardDelta).toFixed(2);
+    SETTINGS.cardBalance=nextCard<0?0:nextCard; SETTINGS.availableBalance=+(SETTINGS.availableBalance+availDelta).toFixed(2);
+    saveBalances(); applyBalances();
   }
-  /* ================================================================== */
 
-  // Pay -> use addPayment to both record txn AND adjust balances
+  /* Pay page + slide confirm */
+  let pendingPayAmt = 0;
+  let confirmFlow = 'pay';
+  const payAmountLabel = document.getElementById('payAmountLabel');
+  const payBackBtn = document.getElementById('payBackBtn');
+  const payCancelBtn = document.getElementById('payCancelBtn');
+  const payTitleEl = document.querySelector('#payPage .payTitle');
+  const transferLabel = document.getElementById('transferLabel');
+  payBackBtn.addEventListener('click', ()=>{ app.className='app pos-0'; });
+  payCancelBtn.addEventListener('click', ()=>{ app.className='app pos-0'; });
+
+  function openPayPage() {
+    payTitleEl.textContent = (confirmFlow === 'cashback') ? 'Cashback Deposit' : 'Pay Card';
+    transferLabel.textContent = (confirmFlow === 'cashback') ? 'Transfer to' : 'Transfer from';
+    payAmountLabel.textContent = '$' + pendingPayAmt.toFixed(2);
+    closeSheet();
+    if (confirmFlow === 'cashback') { closeCbSheet(); }
+    app.className = 'app pos-2';
+    resetSlider();
+  }
   payBtn.addEventListener('click', ()=>{
-    if (amount <= 0) { sheet.classList.remove('active'); return; }
-
-    const payIso = new Date().toISOString();
-    // addPayment will adjust balances now
-    window.addPayment({ amount, iso: payIso });
-
-    sheet.classList.remove('active');
-    showPaySuccess(amount);
+    pendingPayAmt = amount;
+    if (pendingPayAmt <= 0) return;
+    confirmFlow = 'pay';
+    openPayPage();
   });
 
-  // Apply balances on load
-  applyBalances();
+  /* Transactions & cashback */
+  const TXN_STORE_KEY='aa_balances';
+  function saveTransactions(){try{localStorage.setItem(TXN_STORE_KEY,JSON.stringify(transactions))}catch(e){} refreshCashbackTile(); cloudSaveDebounced(); }
+  function rid(){return 't_'+Math.random().toString(36).slice(2,9)}
 
-  /* ---------- TRANSACTIONS + CASHBACK ---------- */
-  const txnListEl = document.getElementById('txnList');
+  const round2=n=>Math.round(n*100)/100;
+  const CASHBACK_RATES={shopping:0.05,food:0.04, travel:0.04, streaming:0.04,gaming:0.03, messaging:0.03};
+  const rateForCategory = cat => CASHBACK_RATES[cat] ?? 0;
+  const calcCashback=(amt,cat)=>round2((Number(amt)||0)*rateForCategory(cat));
+  const getTxnCashback=t=>(typeof t.cashback==='number') ? t.cashback : (t.kind==='purchase' ? calcCashback(t.amount, t.category) : 0);
 
-  const TXN_STORE_KEY = LS_KEYS.TXNS;
+  const SEED_TXNS = [];
+
   function loadTransactions(){
     try{
-      const raw = localStorage.getItem(TXN_STORE_KEY);
-      if(!raw) return null;
-      const arr = JSON.parse(raw);
-      if (Array.isArray(arr)) return arr;
+      const raw=localStorage.getItem(TXN_STORE_KEY);
+      if(raw){
+        const arr=JSON.parse(raw);
+        if(Array.isArray(arr) && arr.length) return arr;
+      }
     }catch(e){}
+    return SEED_TXNS.slice();
+  }
+
+  const CAT_MAP={food:'food-icon.png',gaming:'gaming-icon.png',streaming:'watch-icon.png',travel:'travel-icon.png',messaging:'messaging-icon.png',shopping:'shopping-icon.png',payment:'payment-icon.png'};
+  const catLabel=(k)=>({food:'Food/Drinks',gaming:'Gaming',streaming:'Streaming',travel:'Travel',messaging:'Messaging',shopping:'Shopping',payment:'Payment'}[k]||'Other');
+  const iconByCat=(k)=> CAT_MAP[k] || 'payment-icon.png';
+
+  const KEYWORD_ICON_RULES = [
+    { patterns: [/doordash/i, /dd\*/i, /dashpass/i], icon: 'doordash-icon.png' },
+    { patterns: [/affirm/i], icon: 'affirm-icon.png' },
+    { patterns: [/amazon/i, /\bamzn\b/i, /amzn\s*mk?tp/i, /prime\b/i], icon: 'amazon-icon.png' },
+    { patterns: [/discord/i, /nitro/i], icon: 'discord-icon.png' },
+    { patterns: [/\bapple\b/i, /apple\.?com\/bill/i, /itunes/i, /app\s*store/i, /apple\s*pay/i], icon: 'apple-icon.png' },
+    { patterns: [/\bgoogle\b/i, /google\s*play/i, /(gpay|google\s*pay)/i], icon: 'google-icon.png' },
+    { patterns: [/american\s+air(lines)?/i, /\baadvantage\b/i, /\baa\s?(?:#|flight|tkt|ticket)?/i], icon: 'aa-icon.png' },
+    { patterns: [/singapore\s+air(lines)?/i, /\bkrisflyer\b/i, /\bsia\b/i], icon: 'sing-icon.png' },
+    { patterns: [/card\s*payment/i, /payment.*7295/i, /\b7295\b/i], icon: 'chase-icon.png' },
+  ];
+  function chooseIconForMerchant(name){
+    if (!name) return null;
+    const s = String(name);
+    for (const rule of KEYWORD_ICON_RULES){ for (const rx of rule.patterns){ if (rx.test(s)) return rule.icon; } }
     return null;
   }
-  function saveTransactions(){
-    try{ localStorage.setItem(TXN_STORE_KEY, JSON.stringify(transactions)); }catch(e){}
-    // after any save, recompute cashback tile
-    refreshCashbackTile();
-  }
+  function iconForTransaction(t){ if (t.kind==='payment') return 'chase-icon.png'; return chooseIconForMerchant(t.merchant) || iconByCat(t.category); }
 
-  function rid(){ return 't_'+Math.random().toString(36).slice(2,9) }
+  let transactions = loadTransactions() || [];
 
-  // Cashback helpers
-  const round2 = n => Math.round(n*100)/100;
-  const calcCashback = amt => round2(amt * 0.05);                // 5% on purchases only
-  const getTxnCashback = t => (typeof t.cashback==='number') ? t.cashback :
-                              (t.kind==='purchase' ? calcCashback(Number(t.amount)||0) : 0);
-
-  let transactions = loadTransactions() || [
-    {
-      id: rid(),
-      kind: 'refund',
-      merchant: 'Apple Store',
-      amount: 40.35,
-      status: 'Refunded',
-      card: 'AAdvantage Platinum',
-      iso: '2023-07-14T16:32:00',
-      cashback: 0
-    },
-    {
-      id: rid(),
-      kind: 'purchase',
-      merchant: 'FANATEC',
-      amount: 277.41,
-      status: 'Approved',
-      card: 'AAdvantage Platinum',
-      iso: '2025-04-23T13:04:00',
-      cashback: calcCashback(277.41)
-    }
-  ];
-
-  // Display rule by STATUS (not kind)
-  function formatDisplay(t){
-    const negative = (t.status==='Refunded' || t.status==='Posted');
-    return (negative?'- ':'') + '$' + Number(t.amount).toFixed(2);
-  }
-  function formatMoneyAbs(n){ return '$' + Math.abs(n).toFixed(2) }
-  function shortDate(iso){
-    const d = new Date(iso);
-    return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'});
-  }
-  function fullDateTime(iso){
-    const d = new Date(iso);
-    return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'}) + ', ' +
-           d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
-  }
+  function formatDisplay(t){const negative=(t.status==='Refunded'||t.status==='Posted');return (negative?'- ':'')+'$'+Number(t.amount).toFixed(2)}
+  function formatMoneyAbs(n){return '$'+Math.abs(n).toFixed(2)}
+  function shortDate(iso){const d=new Date(iso);return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'})}
+  function fullDateTime(iso){const d=new Date(iso);return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'})+', '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}
 
   function renderTransactions(){
-    // Newest (later) on top
-    transactions.sort((a,b)=> new Date(b.iso) - new Date(a.iso));
-    txnListEl.innerHTML = transactions.map(t => `
+    transactions.sort((a,b)=>new Date(b.iso)-new Date(a.iso));
+    const rows=transactions.map(t=>{
+      const pct = Math.round(rateForCategory(t.category)*100);
+      const pctChip = (t.kind==='purchase' && pct>0) ? `<div class="cbChip">${pct}%</div>` : '';
+      return `
       <div class="txnRow" data-id="${t.id}" tabindex="0" role="button" aria-label="Open ${t.merchant} transaction">
+        <div class="txnIcon"><img src="./${iconForTransaction(t)}" alt="" /></div>
         <div class="txnMain">
-          <div class="txnTitle">${t.merchant}${t.status ? ` <span style="opacity:.6">• ${t.status}</span>` : ''}</div>
+          <div class="txnTitle">${t.merchant}${t.status?` <span style="opacity:.6">• ${t.status}</span>`:''}</div>
           <div class="txnSub">${shortDate(t.iso)}</div>
         </div>
-        <div class="txnAmt">${formatDisplay(t)}</div>
-      </div>
-    `).join('');
-
-    txnListEl.querySelectorAll('.txnRow').forEach(row=>{
+        <div class="txnRight">
+          <div class="amtWrap">
+            <div class="txnAmt">${formatDisplay(t)}</div>
+            ${pctChip}
+          </div>
+          <div class="chev">›</div>
+        </div>
+      </div>`;
+    }).join('');
+    document.getElementById('txnList').innerHTML=`<div class="txnStack">${rows||''}</div>`;
+    document.querySelectorAll('#txnList .txnRow').forEach(row=>{
       row.addEventListener('click',()=>openTxn(row.dataset.id));
-      row.addEventListener('keypress',e=>{ if(e.key==='Enter') openTxn(row.dataset.id) });
+      row.addEventListener('keypress',e=>{if(e.key==='Enter')openTxn(row.dataset.id)});
     });
   }
 
-  // available cashback = sum(earned) - sum(deposited)
   function computeCashbackAvailable(){
-  const cv = currentCbv();
-  return round2(transactions.reduce((sum,t)=>{
-    // Only include entries tagged with the current cashback version
-    if ((t.cbv || 0) !== cv) return sum;
-    if (t.kind === 'purchase')          return sum + getTxnCashback(t);
-    if (t.kind === 'cashback_deposit')  return sum - (Number(t.amount)||0);
-    return sum;
-  }, 0));
-}
+    const cv=currentCbv();
+    return Math.round(transactions.reduce((sum,t)=>{
+      if((t.cbv||0)!==cv) return sum;
+      if(t.kind==='purchase') return sum+getTxnCashback(t);
+      if(t.kind==='cashback_deposit') return sum-(Number(t.amount)||0);
+      return sum;
+    },0)*100)/100;
+  }
   function refreshCashbackTile(){
-    const total = Math.max(0, computeCashbackAvailable());
-    SETTINGS.cashback = total;
-    saveBalances();
-    if (cashbackEl) cashbackEl.textContent = fmtUSD(total);
+    const total=Math.max(0,computeCashbackAvailable());
+    SETTINGS.cashback=total; saveBalances();
+    if(cashbackEl) cashbackEl.textContent=fmtUSD(total);
   }
 
-  let currentTxnId = null;
+  let currentTxnId=null;
   function openTxn(id){
-    const t = transactions.find(x=>x.id===id);
-    if(!t) return;
-    currentTxnId = id;
-    document.getElementById('txnAmount').textContent = formatMoneyAbs(t.amount);
-    document.getElementById('txnMerchant').textContent = t.merchant;
-    document.getElementById('txnDate').textContent = fullDateTime(t.iso);
-    document.getElementById('txnStatus').innerHTML = `<strong>Status: ${t.status || 'Approved'}</strong>`;
-    document.getElementById('txnCard').textContent = t.card || 'AAdvantage Platinum';
-    document.getElementById('txnTotal').textContent = formatMoneyAbs(t.amount);
-    // Show cashback row only for purchases (not for payments or cashback deposits)
-    const cbRow = document.getElementById('cashbackRow');
-    if (t.kind === 'purchase'){
-      const cb = getTxnCashback(t);
-      document.getElementById('txnCashback').textContent = '$' + cb.toFixed(2);
-      cbRow.classList.remove('hidden');
-    } else {
-      cbRow.classList.add('hidden');
-    }
-    // Show "Deposited To" only for cashback deposits
-    const depRow = document.getElementById('depositTargetRow');
-    if (t.kind === 'cashback_deposit') {
-      const last4 = t.acctLast4 || (t.account||'').slice(-4) || '';
-      document.getElementById('depositTargetValue').textContent = '•••• ' + last4;
-      depRow.classList.remove('hidden');
-    } else {
-      depRow.classList.add('hidden');
-    }
-    app.className = 'app pos-1';
+    const t=transactions.find(x=>x.id===id); if(!t) return; currentTxnId=id;
+    document.getElementById('txnIcon').src = './' + iconForTransaction(t);
+    document.getElementById('txnAmount').textContent=formatMoneyAbs(t.amount);
+    document.getElementById('txnMerchant').textContent=t.merchant;
+    document.getElementById('txnDate').textContent=fullDateTime(t.iso);
+    document.getElementById('txnStatus').innerHTML=`<strong>Status: ${t.status||'Approved'}</strong>`;
+    document.getElementById('txnCard').textContent=t.card||'AAdvantage Platinum';
+    document.getElementById('txnTotal').textContent=formatMoneyAbs(t.amount);
+    const cbRow=document.getElementById('cashbackRow');
+    if(t.kind==='purchase'){document.getElementById('txnCashback').textContent='$'+getTxnCashback(t).toFixed(2);cbRow.classList.remove('hidden')}
+    else{cbRow.classList.add('hidden')}
+    const depRow=document.getElementById('depositTargetRow');
+    if(t.kind==='cashback_deposit'){const last4=t.acctLast4||(t.account||'').slice(-4)||'';document.getElementById('depositTargetValue').textContent='•••• '+last4;depRow.classList.remove('hidden')}
+    else{depRow.classList.add('hidden')}
+    app.className='app pos-1';
   }
-
-  document.getElementById('deleteTxnBtn').addEventListener('click', ()=>{
-    if(!currentTxnId) return;
-    const i = transactions.findIndex(t=>t.id===currentTxnId);
-    if(i>-1){
-      transactions.splice(i,1);
-      saveTransactions();
-      renderTransactions();
-      currentTxnId = null;
-      app.className = 'app pos-0';
-    }
+  document.getElementById('deleteTxnBtn').addEventListener('click',()=>{
+    if(!currentTxnId)return; const i=transactions.findIndex(t=>t.id===currentTxnId);
+    if(i>-1){transactions.splice(i,1);saveTransactions();renderTransactions();currentTxnId=null;app.className='app pos-0'}
   });
 
-  // Public helpers (defaults now AAdvantage Platinum)
-  window.addPurchase = ({merchant, amount, iso, card='AAdvantage Platinum', status='Approved'})=>{
-    const amt = Number(amount);
-    transactions.push({
-      id: rid(), kind:'purchase', merchant, amount: amt, iso, status, card,
-      cashback: calcCashback(amt), cbv: currentCbv()
-    });
-    saveTransactions(); renderTransactions();
-    // Balance effects: purchase increases card balance and reduces available
-    applyBalanceDelta(+amt, -amt);
+  window.addPurchase=({merchant,amount,iso,card='AAdvantage Platinum',status='Approved',category='shopping'})=>{
+    const amt=Number(amount);
+    transactions.push({ id:rid(),kind:'purchase',merchant,amount:amt,iso,status,card,category, cashback:calcCashback(amt,category),cbv:currentCbv() });
+    saveTransactions();renderTransactions();applyBalanceDelta(+amt,-amt);
   };
-    
-  window.addRefund = ({merchant, amount, iso, card='AAdvantage Platinum', status='Refunded'})=>{
-    const amt = Number(amount);
-    transactions.push({ id: rid(), kind:'refund', merchant, amount: amt, iso, status, card, cashback: 0 });
-    saveTransactions();
-    renderTransactions();
-    // Balance effects: refund decreases card balance and increases available
-    applyBalanceDelta(-amt, +amt);
+  window.addRefund=({merchant,amount,iso,card='AAdvantage Platinum',status='Refunded',category='shopping'})=>{
+    const amt=Number(amount);transactions.push({id:rid(),kind:'refund',merchant,amount:amt,iso,status,card,category,cashback:0});
+    saveTransactions();renderTransactions();applyBalanceDelta(-amt,+amt);
   };
-
-  window.addPayment = ({amount, iso, card='AAdvantage Platinum', merchant='Card Payment', status='Posted'})=>{
-    const amt = Number(amount);
-    transactions.push({ id: rid(), kind:'payment', merchant, amount: amt, iso, status, card, cashback: 0 });
-    saveTransactions();
-    renderTransactions();
-    // Balance effects: payment decreases card balance and increases available
-    applyBalanceDelta(-amt, +amt);
+  window.addPayment=({amount,iso,card='AAdvantage Platinum',merchant='Card Payment',status='Posted',category='payment'})=>{
+    const amt=Number(amount);transactions.push({id:rid(),kind:'payment',merchant,amount:amt,iso,status,card,category,cashback:0});
+    saveTransactions();renderTransactions();applyBalanceDelta(-amt,+amt);
   };
-
-  window.addCashbackDeposit = ({amount, iso, card='AAdvantage Platinum', status='Posted', account, routing})=>{
-    transactions.push({
-      id: rid(),
-      kind:'cashback_deposit',
-      merchant:'Cashback deposited',
-      amount:Number(amount),
-      iso, status, card, cashback: 0, cbv: currentCbv(),
-      account, routing, acctLast4: (account||'').slice(-4)
-    });
-    saveTransactions(); renderTransactions();
-    // No card balance effect for cashback deposit
+  window.addCashbackDeposit=({amount,iso,card='AAdvantage Platinum',status='Posted',account,routing})=>{
+    transactions.push({id:rid(),kind:'cashback_deposit',merchant:'Cashback deposited',amount:Number(amount),iso,status,card,category:'payment',cashback:0,cbv:currentCbv(),account,routing,acctLast4:(account||'').slice(-4)});
+    saveTransactions();renderTransactions();
   };
+  window.removeTransaction=(id)=>{const i=transactions.findIndex(t=>t.id===id);if(i>-1){transactions.splice(i,1);saveTransactions();renderTransactions();}}
+  window.removeTransactionWhere=(criteria)=>{const i=transactions.findIndex(t=>Object.entries(criteria).every(([k,v])=>t[k]===v));if(i>-1){transactions.splice(i,1);saveTransactions();renderTransactions();}}
 
-  window.removeTransaction = (id)=>{
-    const i = transactions.findIndex(t=>t.id===id);
-    if(i>-1){ transactions.splice(i,1); saveTransactions(); renderTransactions(); }
-  };
-  window.removeTransactionWhere = (criteria)=>{
-    const i = transactions.findIndex(t => Object.entries(criteria).every(([k,v]) => t[k]===v));
-    if(i>-1){ transactions.splice(i,1); saveTransactions(); renderTransactions(); }
-  };
+  renderTransactions(); refreshCashbackTile();
 
-  renderTransactions();
-  refreshCashbackTile(); // ensure tile reflects seeded/loaded data on first load
+  /* Card details */
+  const cardSheet=document.getElementById('cardSheet'),cardDim=document.getElementById('cardDim'),
+        closeCardSheetBtn=document.getElementById('closeCardSheet'),
+        cdNumber=document.getElementById('cdNumber'),cdExpiry=document.getElementById('cdExpiry'),
+        cdCvvActual=document.getElementById('cdCvvActual'), cdCvvMasked=document.getElementById('cdCvvMasked'),
+        cvvEye=document.getElementById('cvvEye'),
+        openCardDetails=document.getElementById('openCardDetails');
 
-  /* --- Card details sheet wiring (tap big card to open) --- */
-  const cardSheet = document.getElementById('cardSheet');
-  const cardDim = document.getElementById('cardDim');
-  const closeCardSheetBtn = document.getElementById('closeCardSheet');
-  const cdNumber = document.getElementById('cdNumber');
-  const cdExpiry = document.getElementById('cdExpiry');
-  const cdCvv = document.getElementById('cdCvv');
-
+  function setCvvVisible(show){
+    const eyeOpen = cvvEye.querySelector('#eyeOpen');
+    const eyeClosed = cvvEye.querySelector('#eyeClosed');
+    if(show){
+      cdCvvActual.classList.remove('hidden');
+      cdCvvMasked.classList.add('hidden');
+      if(eyeOpen) eyeOpen.style.display='block';
+      if(eyeClosed) eyeClosed.style.display='none';
+      cvvEye.setAttribute('aria-label','Hide security code');
+    }else{
+      cdCvvActual.classList.add('hidden');
+      cdCvvMasked.classList.remove('hidden');
+      if(eyeOpen) eyeOpen.style.display='none';
+      if(eyeClosed) eyeClosed.style.display='block';
+      cvvEye.setAttribute('aria-label','Show security code');
+    }
+  }
   function openCardSheet(){
-    cdNumber.textContent = (SETTINGS.cardNumber || '')
-      .replace(/\s+/g,'')
-      .replace(/(\d{4})(?=\d)/g,'$1 ');
-    cdExpiry.textContent = SETTINGS.cardExpiry || 'MM/YY';
-    cdCvv.textContent = SETTINGS.cardCvv || '000';
+    cdNumber.textContent=(SETTINGS.cardNumber||'').replace(/\s+/g,'').replace(/(\d{4})(?=\d)/g,'$1 ');
+    cdExpiry.textContent=SETTINGS.cardExpiry||'MM/YY';
+    cdCvvActual.textContent=SETTINGS.cardCvv||'000';
+    cdCvvMasked.textContent='•••';
+    setCvvVisible(false); // always start hidden
     cardSheet.classList.add('active');
   }
-  function closeCardSheet(){ cardSheet.classList.remove('active'); }
+  function closeCardSheet(){cardSheet.classList.remove('active')}
+  cardDim.addEventListener('click',closeCardSheet); closeCardSheetBtn.addEventListener('click',closeCardSheet);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCardSheet()});
 
-  cardDim.addEventListener('click', closeCardSheet);
-  closeCardSheetBtn.addEventListener('click', closeCardSheet);
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCardSheet(); });
+  // open via the new nav icon; big card no longer opens the sheet
+  if(openCardDetails){ openCardDetails.addEventListener('click', openCardSheet); }
+  const bigCardEl=document.getElementById('bigCard'); if(bigCardEl){bigCardEl.style.cursor='default';}
 
-  const bigCardEl = document.getElementById('bigCard');
-  if (bigCardEl){
-    bigCardEl.style.cursor='pointer';
-    bigCardEl.addEventListener('click', openCardSheet);
+  if(cvvEye){
+    cvvEye.addEventListener('click', ()=>{
+      const showing = !cdCvvActual.classList.contains('hidden');
+      setCvvVisible(!showing);
+    });
   }
 
-  /* ===== Add Transaction flow ===== */
-  const addTxnSheet = document.getElementById('addTxnSheet');
-  const addTxnDim   = document.getElementById('addTxnDim');
-  const openAddTxn  = document.getElementById('openAddTxn');
-  const closeAddTxn = document.getElementById('closeAddTxn');
-  const txMerchant  = document.getElementById('txMerchant');
-  const txAmount    = document.getElementById('txAmount');
-  const txWhen      = document.getElementById('txWhen');
-  const txStatus    = document.getElementById('txStatus');
-  const txContinue  = document.getElementById('txContinue');
-  const txCancelFromForm = document.getElementById('txCancelFromForm');
-
-  const confirmSheet = document.getElementById('confirmTxnSheet');
-  const confirmDim   = document.getElementById('confirmDim');
-  const closeConfirm = document.getElementById('closeConfirm');
-  const confirmSummary = document.getElementById('confirmSummary');
-  const confirmAddBtn  = document.getElementById('confirmAddBtn');
-  const editTxnBtn     = document.getElementById('editTxnBtn');
-
-  function openAddSheet(){ addTxnSheet.classList.add('active'); }
-  function closeAddSheet(){ addTxnSheet.classList.remove('active'); }
-  function openConfirm(){ confirmSheet.classList.add('active'); }
-  function closeConfirmSheet(){ confirmSheet.classList.remove('active'); }
-
-  openAddTxn.addEventListener('click', openAddSheet);
-  addTxnDim.addEventListener('click', closeAddSheet);
-  closeAddTxn.addEventListener('click', closeAddSheet);
-  txCancelFromForm.addEventListener('click', closeAddSheet);
-
-  confirmDim.addEventListener('click', closeConfirmSheet);
-  closeConfirm.addEventListener('click', closeConfirmSheet);
-  editTxnBtn.addEventListener('click', ()=>{ closeConfirmSheet(); openAddSheet(); });
-
-  let pendingTxn = null;
-  function fullDateTime2(iso){
-    const d = new Date(iso);
-    return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'}) + ', ' +
-           d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
-  }
-  txContinue.addEventListener('click', ()=>{
-    const m = (txMerchant.value||'').trim();
-    const a = parseFloat(txAmount.value);
-    const w = txWhen.value ? new Date(txWhen.value) : new Date();
-    const s = txStatus.value || 'Approved';
-    if(!m || !isFinite(a)){ return; }
-    pendingTxn = { merchant:m, amount: +a.toFixed(2), iso: w.toISOString(), status:s };
-    confirmSummary.innerHTML = `
-      <p><b>Merchant:</b> ${m}</p>
+  /* Add Txn flow */
+  const addTxnSheet=document.getElementById('addTxnSheet'),addTxnDim=document.getElementById('addTxnDim'),
+        openAddTxn=document.getElementById('openAddTxn'),closeAddTxn=document.getElementById('closeAddTxn'),
+        txMerchant=document.getElementById('txMerchant'),txAmount=document.getElementById('txAmount'),
+        txWhen=document.getElementById('txWhen'),txStatus=document.getElementById('txStatus'),
+        txCategory=document.getElementById('txCategory'),
+        txContinue=document.getElementById('txContinue'),txCancelFromForm=document.getElementById('txCancelFromForm');
+  const confirmSheet=document.getElementById('confirmTxnSheet'),confirmDim=document.getElementById('confirmDim'),
+        closeConfirm=document.getElementById('closeConfirm'),confirmSummary=document.getElementById('confirmSummary'),
+        confirmAddBtn=document.getElementById('confirmAddBtn'),editTxnBtn=document.getElementById('editTxnBtn');
+  function openAddSheet(){addTxnSheet.classList.add('active')}
+  function closeAddSheet(){addTxnSheet.classList.remove('active')}
+  function openConfirm(){confirmSheet.classList.add('active')}
+  function closeConfirmSheet(){confirmSheet.classList.remove('active')}
+  openAddTxn.addEventListener('click',openAddSheet);
+  addTxnDim.addEventListener('click',closeAddSheet); closeAddTxn.addEventListener('click',closeAddSheet);
+  txCancelFromForm.addEventListener('click',closeAddSheet);
+  confirmDim.addEventListener('click',closeConfirmSheet); closeConfirm.addEventListener('click',closeConfirmSheet);
+  editTxnBtn.addEventListener('click',()=>{closeConfirmSheet();openAddSheet()});
+  let pendingTxn=null;
+  function fullDateTime2(iso){const d=new Date(iso);return d.toLocaleDateString(undefined,{month:'2-digit',day:'2-digit',year:'2-digit'})+', '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}
+  txContinue.addEventListener('click',()=>{
+    const m=(txMerchant.value||'').trim(); const a=parseFloat(txAmount.value);
+    const w=txWhen.value?new Date(txWhen.value):new Date(); const s=txStatus.value||'Approved';
+    const c=txCategory.value||'shopping';
+    if(!m||!isFinite(a))return;
+    pendingTxn={merchant:m,amount:+a.toFixed(2),iso:w.toISOString(),status:s,category:c};
+    confirmSummary.innerHTML=`<p><b>Merchant:</b> ${m}</p>
       <p><b>Amount:</b> $${pendingTxn.amount.toFixed(2)}</p>
       <p><b>Date &amp; Time:</b> ${fullDateTime2(pendingTxn.iso)}</p>
       <p><b>Status:</b> ${s}</p>
-    `;
-    closeAddSheet();
-    openConfirm();
+      <p><b>Category:</b> ${catLabel(c)}</p>`;
+    closeAddSheet(); openConfirm();
+  });
+  confirmAddBtn.addEventListener('click',()=>{
+    if(!pendingTxn)return; const {merchant,amount,iso,status,category}=pendingTxn;
+    if(status==='Approved'){window.addPurchase({merchant,amount,iso,status,card:'Sapphire Reserve',category})}
+    else if(status==='Refunded'){window.addRefund({merchant,amount,iso,status,card:'Sapphire Reserve',category})}
+    else{window.addPayment({amount,iso,status,card:'Sapphire Reserve',merchant,category})}
+    pendingTxn=null; closeConfirmSheet();
   });
 
-  confirmAddBtn.addEventListener('click', ()=>{
-    if(!pendingTxn) return;
-    const {merchant, amount, iso, status} = pendingTxn;
-    if(status==='Approved'){
-      window.addPurchase({merchant, amount, iso, status, card:'AAdvantage Platinum'});
-    }else if(status==='Refunded'){
-      window.addRefund({merchant, amount, iso, status, card:'AAdvantage Platinum'});
-    }else{
-      window.addPayment({amount, iso, status, card:'AAdvantage Platinum', merchant});
-    }
-    pendingTxn = null;
-    closeConfirmSheet();
-  });
+  /* Cashback sheet */
+  const cashbackTile=document.getElementById('cashbackTile'),cbSheet=document.getElementById('cashbackSheet'),
+        cbDim=document.getElementById('cbDim'),cbViews=document.getElementById('cbViews'),
+        cbClose1=document.getElementById('cbClose1'),cbClose2=document.getElementById('cbClose2'),
+        cbDepositBtn=document.getElementById('cbDepositBtn'),cbSubmit=document.getElementById('cbSubmit'),
+        cbCancel=document.getElementById('cbCancel'),cbAcct=document.getElementById('cbAcct'),cbRouting=document.getElementById('cbRouting');
+  function openCbSheet(){cbViews.style.transform='translateX(0%)'; cbAmount=0; cbLockedAtMax=false; cbLastFrac=0; cbApplyFromFraction(0,false); cbSheet.classList.add('active')}
+  function closeCbSheet(){cbSheet.classList.remove('active')}
+  cashbackTile.addEventListener('click',openCbSheet); cbDim.addEventListener('click',closeCbSheet);
+  cbClose1.addEventListener('click',closeCbSheet); cbClose2.addEventListener('click',closeCbSheet); cbCancel.addEventListener('click',closeCbSheet);
 
-  /* ======= CASHBACK SHEET LOGIC ======= */
-  const cashbackTile = document.getElementById('cashbackTile');
-  const cbSheet = document.getElementById('cashbackSheet');
-  const cbDim = document.getElementById('cbDim');
-  const cbViews = document.getElementById('cbViews');
-  const cbClose1 = document.getElementById('cbClose1');
-  const cbClose2 = document.getElementById('cbClose2');
-  const cbDepositBtn = document.getElementById('cbDepositBtn');
-  const cbSubmit = document.getElementById('cbSubmit');
-  const cbCancel = document.getElementById('cbCancel');
-  const cbAcct = document.getElementById('cbAcct');
-  const cbRouting = document.getElementById('cbRouting');
-
-  function openCbSheet(){
-    // reset to step 1 and zero amount
-    cbViews.style.transform = 'translateX(0%)';
-    cbAmount = 0;
-    cbLockedAtMax=false; cbLastFrac=0;
-    cbApplyFromFraction(0,false);
-    cbSheet.classList.add('active');
+  const cbRingWrap=document.getElementById('cbRingWrap'),cbRingSvg=document.getElementById('cbRingSvg'),cbProgress=document.getElementById('cbProgress'),
+        cbHandle=document.getElementById('cbHandle'),cbAmountLabel=document.getElementById('cbAmountLabel');
+  const CB_R=120, CB_C=2*Math.PI*CB_R; cbProgress.setAttribute('stroke-dasharray',`${CB_C}`); cbProgress.setAttribute('stroke-dashoffset',`${CB_C}`);
+  let CB_MAX=0, cbAmount=0, cbDragging=false, cbLastFrac=0, cbLockedAtMax=false;
+  function cbSetMax(){CB_MAX=Math.max(0,computeCashbackAvailable())}
+  function cbSetUI(v){cbProgress.setAttribute('stroke',v>0?'url(#cbGradGreen)':'url(#cbGradGray)')}
+  function cbSignedDelta(a,b){return (((a-b)+1.5)%1)-0.5}
+  function cbApplyFromFraction(fracRaw,fromDrag=false){
+    cbSetMax(); let f=Math.max(0,Math.min(0.999999,fracRaw)); const delta=cbSignedDelta(f,cbLastFrac);
+    if(cbLockedAtMax){if(delta>0){cbLockedAtMax=true;f=1}else{cbLockedAtMax=false}}
+    const NEAR_MAX=0.995; if(!cbLockedAtMax&&f>=NEAR_MAX){cbLockedAtMax=true;f=1}
+    cbLastFrac=f; const fracForAmount=(f===1)?1:f; cbAmount=+((0+fracForAmount*(CB_MAX-0)).toFixed(2));
+    const dash=CB_C*(1-fracForAmount); cbProgress.style.transition=fromDrag?'none':'stroke-dashoffset 220ms ease, stroke 220ms ease'; cbProgress.setAttribute('stroke-dashoffset',`${dash}`);
+    const ang=(-90+360*fracForAmount)*Math.PI/180; const hx=160+CB_R*Math.cos(ang), hy=160+CB_R*Math.sin(ang);
+    cbHandle.style.transition=fromDrag?'none':'cx 180ms ease, cy 180ms ease'; cbHandle.setAttribute('cx',hx.toFixed(2)); cbHandle.setAttribute('cy',hy.toFixed(2));
+    cbAmountLabel.textContent='$'+cbAmount.toFixed(2); cbDepositBtn.textContent='Deposit $'+cbAmount.toFixed(2); cbDepositBtn.disabled=!(cbAmount>0); cbSetUI(cbAmount);
   }
-  function closeCbSheet(){ cbSheet.classList.remove('active'); }
-  cashbackTile.addEventListener('click', openCbSheet);
-  cbDim.addEventListener('click', closeCbSheet);
-  cbClose1.addEventListener('click', closeCbSheet);
-  cbClose2.addEventListener('click', closeCbSheet);
-  cbCancel.addEventListener('click', closeCbSheet);
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCbSheet(); });
-
-  // Ring for cashback
-  const cbRingWrap = document.getElementById('cbRingWrap');
-  const cbRingSvg = document.getElementById('cbRingSvg');
-  const cbProgress = document.getElementById('cbProgress');
-  const cbHandle = document.getElementById('cbHandle');
-  const cbAmountLabel = document.getElementById('cbAmountLabel');
-
-  const CB_R = 120;
-  const CB_C = 2*Math.PI*CB_R;
-  cbProgress.setAttribute('stroke-dasharray', `${CB_C}`);
-  cbProgress.setAttribute('stroke-dashoffset', `${CB_C}`);
-
-  let CB_MAX = 0;
-  let cbAmount = 0;
-  let cbDragging=false, cbLastFrac=0, cbLockedAtMax=false;
-
-  function cbSetMax(){
-    CB_MAX = Math.max(0, computeCashbackAvailable());
-  }
-
-  function cbSetUI(v){
-    cbProgress.setAttribute('stroke', v>0 ? 'url(#cbGradGreen)' : 'url(#cbGradGray)');
-  }
-
-  function cbSignedDelta(a,b){ return (((a-b)+1.5)%1)-0.5; }
-
-  function cbApplyFromFraction(fracRaw, fromDrag=false){
-    cbSetMax(); // in case cashback changed
-    let f = Math.max(0, Math.min(0.999999, fracRaw));
-    const delta = cbSignedDelta(f, cbLastFrac);
-
-    if (cbLockedAtMax){
-      if (delta > 0){ cbLockedAtMax=true; f = 1; } else { cbLockedAtMax=false; }
-    }
-    const NEAR_MAX = 0.995;
-    if (!cbLockedAtMax && f >= NEAR_MAX){ cbLockedAtMax=true; f=1; }
-
-    cbLastFrac = f;
-    const fracForAmount = (f===1)?1:f;
-    cbAmount = +((0 + fracForAmount*(CB_MAX-0)).toFixed(2));
-
-    const dash = CB_C*(1-fracForAmount);
-    cbProgress.style.transition = fromDrag ? 'none' : 'stroke-dashoffset 220ms ease, stroke 220ms ease';
-    cbProgress.setAttribute('stroke-dashoffset', `${dash}`);
-
-    const ang=(-90 + 360*fracForAmount)*Math.PI/180;
-    const hx=160 + CB_R*Math.cos(ang), hy=160 + CB_R*Math.sin(ang);
-    cbHandle.style.transition = fromDrag ? 'none' : 'cx 180ms ease, cy 180ms ease';
-    cbHandle.setAttribute('cx',hx.toFixed(2));
-    cbHandle.setAttribute('cy',hy.toFixed(2));
-
-    cbAmountLabel.textContent='$'+cbAmount.toFixed(2);
-    cbDepositBtn.textContent='Deposit $'+cbAmount.toFixed(2);
-    cbDepositBtn.disabled = !(cbAmount > 0);
-    cbSetUI(cbAmount);
-  }
-
   function cbFracFromPointer(evt){
     const rect=cbRingWrap.getBoundingClientRect();
-    const x=(evt.touches?evt.touches[0].clientX:evt.clientX)-rect.left;
-    const y=(evt.touches?evt.touches[0].clientY:evt.clientY)-rect.top;
-    const cx=rect.width/2, cy=rect.height/2;
-    let theta=Math.atan2(y-cy,x-cx);
-    theta+=Math.PI/2;
-    if(theta<0) theta+=Math.PI*2;
-    return theta/(Math.PI*2);
+    const x=(evt.touches?evt.touches[0].clientX:evt.clientX)-rect.left, y=(evt.touches?evt.touches[0].clientY:evt.clientY)-rect.top;
+    const cx=rect.width/2, cy=rect.height/2; let theta=Math.atan2(y-cy,x-cx); theta+=Math.PI/2; if(theta<0) theta+=Math.PI*2; return theta/(Math.PI*2);
   }
-
-  const cbStart=e=>{cbDragging=true; cbApplyFromFraction(cbFracFromPointer(e), true); e.preventDefault();}
-  const cbMove =e=>{if(!cbDragging) return; cbApplyFromFraction(cbFracFromPointer(e), true);}
-  const cbEnd  =()=>{cbDragging=false;}
-
+  const cbStart=e=>{cbDragging=true;cbApplyFromFraction(cbFracFromPointer(e),true);e.preventDefault()}
+  const cbMove=e=>{if(!cbDragging)return;cbApplyFromFraction(cbFracFromPointer(e),true)}
+  const cbEnd=()=>{cbDragging=false}
   cbHandle.addEventListener('mousedown',cbStart); cbHandle.addEventListener('touchstart',cbStart,{passive:false});
   cbRingSvg.addEventListener('mousedown',cbStart); cbRingSvg.addEventListener('touchstart',cbStart,{passive:false});
   window.addEventListener('mousemove',cbMove,{passive:false}); window.addEventListener('touchmove',cbMove,{passive:false});
   window.addEventListener('mouseup',cbEnd); window.addEventListener('touchend',cbEnd);
 
-  cbDepositBtn.addEventListener('click', ()=>{
-    if(cbAmount<=0) return;
-    // move to step 2
-    cbViews.style.transform = 'translateX(-50%)';
-    // prefill fields blank
-    cbAcct.value=''; cbRouting.value='';
+  /* Update Balances sheet logic */
+  const balancesSheet=document.getElementById('balancesSheet'),
+        balancesDim=document.getElementById('balancesDim'),
+        openBalances=document.getElementById('openBalances'),
+        closeBalances=document.getElementById('closeBalances'),
+        balancesSaveBtn=document.getElementById('balancesSaveBtn'),
+        balancesCancelBtn=document.getElementById('balancesCancelBtn'),
+        editCardBalance=document.getElementById('editCardBalance'),
+        editAvailableBalance=document.getElementById('editAvailableBalance'),
+        editCashback=document.getElementById('editCashback');
+
+  function openBalancesSheet(){
+    editCardBalance.value = (Number(SETTINGS.cardBalance)||0).toFixed(2);
+    editAvailableBalance.value = (Number(SETTINGS.availableBalance)||0).toFixed(2);
+    editCashback.value = (Number(SETTINGS.cashback)||0).toFixed(2);
+    balancesSheet.classList.add('active');
+  }
+  function closeBalancesSheet(){ balancesSheet.classList.remove('active'); }
+
+  openBalances.addEventListener('click', openBalancesSheet);
+  balancesDim.addEventListener('click', closeBalancesSheet);
+  closeBalances.addEventListener('click', closeBalancesSheet);
+  balancesCancelBtn.addEventListener('click', closeBalancesSheet);
+
+  balancesSaveBtn.addEventListener('click', ()=>{
+    const card = parseFloat(editCardBalance.value);
+    const avail = parseFloat(editAvailableBalance.value);
+    const cb = parseFloat(editCashback.value);
+    if (isFinite(card)) SETTINGS.cardBalance = +card.toFixed(2);
+    if (isFinite(avail)) SETTINGS.availableBalance = +avail.toFixed(2);
+    if (isFinite(cb)) SETTINGS.cashback = +cb.toFixed(2);
+    saveBalances();
+    applyBalances();
+    closeBalancesSheet();
   });
 
-  cbSubmit.addEventListener('click', ()=>{
-    const acct=(cbAcct.value||'').trim();
-    const routing=(cbRouting.value||'').trim();
-    if(!acct || !routing || cbAmount<=0) return;
+  /* Slide to confirm */
+  const openAcctPicker = document.getElementById('openAcctPicker');
+  const acctSheet = document.getElementById('acctSheet');
+  const acctDim = document.getElementById('acctDim');
+  const acctClose = document.getElementById('acctClose');
+  const acctSave = document.getElementById('acctSave');
+  const fromAcctNameEl = document.getElementById('fromAcctName');
+  function openAcctSheet(){ acctSheet.classList.add('active'); }
+  function closeAcctSheet(){ acctSheet.classList.remove('active'); }
+  openAcctPicker.addEventListener('click', openAcctSheet);
+  acctDim.addEventListener('click', closeAcctSheet);
+  acctClose.addEventListener('click', closeAcctSheet);
+  acctSave.addEventListener('click', ()=>{
+    const sel = document.querySelector('#acctList input[name="acct"]:checked');
+    if (sel) fromAcctNameEl.textContent = sel.value;
+    closeAcctSheet();
+  });
 
+  const slideWrap = document.getElementById('slideWrap');
+  const slideThumb = document.getElementById('slideThumb');
+  const slideLabel = document.getElementById('slideLabel');
+  const slideFill = document.getElementById('slideFill');
+  let draggingSlide=false, startX=0, thumbX=0, maxX=0, confirmed=false, thumbW=52;
+
+  function resetSlider(){
+    confirmed=false;
+    slideThumb.style.transition='';
+    slideThumb.style.left='4px';
+    slideFill.style.transition='';
+    slideFill.style.width='0px';
+    slideWrap.classList.remove('slideDone');
+    slideLabel.textContent='Slide to confirm';
+  }
+
+  function beginDrag(e){
+    if(confirmed) return;
+    draggingSlide=true;
+    startX=(e.touches?e.touches[0].clientX:e.clientX);
+    const wrapRect=slideWrap.getBoundingClientRect();
+    const thumbRect=slideThumb.getBoundingClientRect();
+    maxX = wrapRect.width - thumbRect.width - 8;
+    thumbX = parseFloat(slideThumb.style.left||'4');
+    thumbW = thumbRect.width;
+    slideThumb.style.transition='none';
+    slideFill.style.transition='width .15s ease';
+    e.preventDefault();
+  }
+  function moveDrag(e){
+    if(!draggingSlide||confirmed) return;
+    const x=(e.touches?e.touches[0].clientX:e.clientX);
+    const dx=x-startX;
+    let nx=Math.max(4,Math.min(4+dx+ (thumbX-4),4+maxX));
+    slideThumb.style.left=nx+'px';
+    const fillW = Math.max(0, (nx - 4) + thumbW);
+    slideFill.style.width = fillW + 'px';
+  }
+  function endDrag(){
+    if(!draggingSlide||confirmed) return;
+    draggingSlide=false;
+    const currentLeft=parseFloat(slideThumb.style.left||'4');
+    const threshold=4+maxX*0.92;
+    if(currentLeft>=threshold){
+      confirmed=true;
+      slideThumb.style.left=(4+maxX)+'px';
+      slideFill.style.width='calc(100% - 8px)';
+      slideWrap.classList.add('slideDone');
+      slideLabel.textContent='Processing…';
+      performPayment();
+    }else{
+      slideThumb.style.transition='left .25s ease';
+      slideThumb.style.left='4px';
+      slideFill.style.transition='width .25s ease';
+      slideFill.style.width='0px';
+    }
+  }
+  slideThumb.addEventListener('mousedown',beginDrag);
+  slideThumb.addEventListener('touchstart',beginDrag,{passive:false});
+  window.addEventListener('mousemove',moveDrag,{passive:false});
+  window.addEventListener('touchmove',moveDrag,{passive:false});
+  window.addEventListener('mouseup',endDrag);
+  window.addEventListener('touchend',endDrag);
+
+  function showLoadingChip(message){
+    const chip=document.createElement('div');
+    chip.className='loadingChip';
+    chip.innerHTML='<div class="spinner"></div><div>'+(message||'Submitting payment…')+'</div>';
+    document.body.appendChild(chip);
+    return chip;
+  }
+
+  function performPayment(){
+    const isDeposit = (confirmFlow === 'cashback');
+    const chip=showLoadingChip(isDeposit ? 'Submitting deposit…' : 'Submitting payment…');
     const nowIso = new Date().toISOString();
 
-    // 1) Record locally (removes cashback and posts "Cashback deposited")
-    window.addCashbackDeposit({ amount: cbAmount, iso: nowIso, account: acct, routing });
+    if (isDeposit){
+      window.addCashbackDeposit({amount:pendingPayAmt,iso:nowIso,account:fromAcctNameEl.textContent});
+    }else{
+      window.addPayment({amount:pendingPayAmt,iso:nowIso,merchant:'CARD PAYMENT 7295',category:'payment'});
+    }
 
-    // reset & close
-    cbAmount=0; cbApplyFromFraction(0,false);
-    closeCbSheet();
-  });
+    setTimeout(()=>{
+      chip.remove();
+      app.className='app pos-0';
+      resetSlider();
+    },1200);
+  }
 
-  /* END Cashback sheet logic */
+  /* Start */
+  (async ()=>{ const db=await fbInit(); if(db){ await cloudLoad(); } applyBalances(); })();
 
 })();
 </script>
 </body>
 </html>
+
+
+
+
+
+
+
 
 
 
