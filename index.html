@@ -828,7 +828,7 @@
   });
 
   /* Transactions & cashback */
-  const TXN_STORE_KEY='aa_balances';
+  const TXN_STORE_KEY='aa_txns';
   function saveTransactions(){try{localStorage.setItem(TXN_STORE_KEY,JSON.stringify(transactions))}catch(e){} refreshCashbackTile(); cloudSaveDebounced(); }
   function rid(){return 't_'+Math.random().toString(36).slice(2,9)}
 
@@ -841,15 +841,15 @@
   const SEED_TXNS = [];
 
   function loadTransactions(){
-    try{
-      const raw=localStorage.getItem(TXN_STORE_KEY);
-      if(raw){
-        const arr=JSON.parse(raw);
-        if(Array.isArray(arr) && arr.length) return arr;
-      }
-    }catch(e){}
-    return SEED_TXNS.slice();
-  }
+  try{
+    const raw=localStorage.getItem(TXN_STORE_KEY);
+    if(raw){
+      const arr=JSON.parse(raw);
+      if(Array.isArray(arr)) return arr; // allow empty array
+    }
+  }catch(e){}
+  return SEED_TXNS.slice();
+}
 
   const CAT_MAP={food:'food-icon.png',gaming:'gaming-icon.png',streaming:'watch-icon.png',travel:'travel-icon.png',messaging:'messaging-icon.png',shopping:'shopping-icon.png',payment:'payment-icon.png'};
   const catLabel=(k)=>({food:'Food/Drinks',gaming:'Gaming',streaming:'Streaming',travel:'Travel',messaging:'Messaging',shopping:'Shopping',payment:'Payment'}[k]||'Other');
@@ -1253,6 +1253,7 @@
 </script>
 </body>
 </html>
+
 
 
 
