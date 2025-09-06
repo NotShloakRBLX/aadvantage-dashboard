@@ -1175,6 +1175,26 @@
     },1200);
   }
 
+  /* >>> Added handlers to enable cashback deposit flow <<< */
+  // 1) Advance to ACH form after choosing amount
+  cbDepositBtn.addEventListener('click', ()=>{
+    if (cbDepositBtn.disabled) return;
+    cbViews.style.transform = 'translateX(-50%)';
+  });
+  // 2) On ACH "Deposit", route through the standard confirm slider as a cashback deposit
+  cbSubmit.addEventListener('click', ()=>{
+    const acct = (cbAcct.value||'').trim();
+    const routing = (cbRouting.value||'').trim();
+    if (!acct || !routing) return;
+    pendingPayAmt = cbAmount;
+    confirmFlow = 'cashback';
+    // show destination on the confirm page
+    const last4 = acct.slice(-4);
+    fromAcctNameEl.textContent = `ACH •••• ${last4}`;
+    openPayPage();
+  });
+  /* <<< end added handlers >>> */
+
   /* Start (local only) */
   (()=>{ applyBalances(); renderTransactions(); refreshCashbackTile(); })();
 
