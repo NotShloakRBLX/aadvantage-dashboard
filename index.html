@@ -537,7 +537,7 @@
           <img src="./chase-icon.png" alt="">
           <div class="names"><div class="big">Checking •••• 2143</div><div class="small">Available</div></div>
         </label>
-        <label class="acctRow">
+        <label class="acctRow>
           <input type="radio" name="acct" value="TOTAL CHECKING (••• 6750)" />
           <img src="./chase-icon.png" alt="">
           <div class="names"><div class="big">TOTAL CHECKING (…6750)</div><div class="small">Available</div></div>
@@ -551,7 +551,9 @@
 <script>
 (()=> {
   /* Firebase helpers */
-  let cloudSaveDebounced = ()=>{};
+  let cloudSaveSettingsDebounced = ()=>{};
+  let cloudSaveTxnsDebounced = ()=>{};
+
   async function fbInit(){
     try{
       if(!window.firebaseConfig || !firebase?.initializeApp) return null;
@@ -582,14 +584,30 @@
       await ref.set({ settings: SETTINGS, transactions: transactions, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
     }
   }
-  async function cloudSave(){
+
+  async function cloudSaveSettings(){
     try{
       const ref=await cloudDocRef(); if(!ref) return;
-      await ref.set({ settings: SETTINGS, transactions: transactions, updatedAt: firebase.firestore.FieldValue.serverTimestamp() }, {merge:true});
+      await ref.set(
+        { settings: SETTINGS, updatedAt: firebase.firestore.FieldValue.serverTimestamp() },
+        { merge: true }
+      );
     }catch(e){}
   }
+
+  async function cloudSaveTransactions(){
+    try{
+      const ref=await cloudDocRef(); if(!ref) return;
+      await ref.set(
+        { transactions: transactions, updatedAt: firebase.firestore.FieldValue.serverTimestamp() },
+        { merge: true }
+      );
+    }catch(e){}
+  }
+
   function debounce(fn,ms){let t;return (...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms);} }
-  cloudSaveDebounced = debounce(cloudSave, 600);
+  cloudSaveSettingsDebounced = debounce(cloudSaveSettings, 600);
+  cloudSaveTxnsDebounced = debounce(cloudSaveTransactions, 600);
 
   /* App setup */
   const app=document.getElementById('app');
@@ -613,7 +631,7 @@
     return {...SETTINGS_DEFAULT};
   }
   let SETTINGS=loadBalances();
-  const saveBalances=()=>{ localStorage.setItem('aa_balances',JSON.stringify(SETTINGS)); cloudSaveDebounced(); };
+  const saveBalances=()=>{ localStorage.setItem('aa_balances',JSON.stringify(SETTINGS)); cloudSaveSettingsDebounced(); };
 
   const CASHBACK_VERSION=2, CBV_KEY='aa_cbv_current';
   const ensureCbv=()=>{const stored=Number(localStorage.getItem(CBV_KEY)||'0');if(stored!==CASHBACK_VERSION){localStorage.setItem(CBV_KEY,String(CASHBACK_VERSION))}return CASHBACK_VERSION};
@@ -829,7 +847,11 @@
 
   /* Transactions & cashback */
   const TXN_STORE_KEY='aa_txns';
-  function saveTransactions(){try{localStorage.setItem(TXN_STORE_KEY,JSON.stringify(transactions))}catch(e){} refreshCashbackTile(); cloudSaveDebounced(); }
+  function saveTransactions(){
+    try{localStorage.setItem(TXN_STORE_KEY,JSON.stringify(transactions))}catch(e){}
+    refreshCashbackTile();
+    cloudSaveTxnsDebounced();
+  }
   function rid(){return 't_'+Math.random().toString(36).slice(2,9)}
 
   const round2=n=>Math.round(n*100)/100;
@@ -1253,18 +1275,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
