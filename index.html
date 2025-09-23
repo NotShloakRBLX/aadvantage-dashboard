@@ -1211,10 +1211,17 @@
 
   /* >>> Added handlers to enable cashback deposit flow <<< */
   // 1) Advance to ACH form after choosing amount
-  cbDepositBtn.addEventListener('click', ()=>{
-    if (cbDepositBtn.disabled) return;
-    cbViews.style.transform = 'translateX(-50%)';
-  });
+  cbDepositBtn.addEventListener('click', () => {
+  // Make sure we have a sane, clamped amount
+  cbSetMax();
+  pendingPayAmt = Math.max(0, Math.min(cbAmount, CB_MAX));
+  if (pendingPayAmt <= 0) return;
+
+  confirmFlow = 'cashback';
+  // (Optional) set a generic destination label
+  fromAcctNameEl.textContent = 'Cashback Wallet';
+  openPayPage();
+});
   // 2) On ACH "Deposit", route through the standard confirm slider as a cashback deposit
   cbSubmit.addEventListener('click', ()=>{
     const acct = (cbAcct.value||'').trim();
@@ -1236,6 +1243,7 @@
 </script>
 </body>
 </html>
+
 
 
 
