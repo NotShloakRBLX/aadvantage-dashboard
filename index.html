@@ -586,7 +586,7 @@
   const app=document.getElementById('app');
   document.getElementById('backTxn').addEventListener('click', ()=>{ app.className='app pos-0'; });
 
-  const SETTINGS_DEFAULT = {version:11,cardBalance:49.89,availableBalance:275.11,cashback:9.12,
+  const SETTINGS_DEFAULT = {version:11,cardBalance:49.89,availableBalance:275.11,cashback:9.12,remainingStatement:0,
     cardNumber:'5402 1694 6892 8126',cardExpiry:'07/30',cardCvv:'792'};
 
   function loadBalances(){
@@ -598,6 +598,7 @@
           cardBalance: isFinite(+s.cardBalance) ? +s.cardBalance : SETTINGS_DEFAULT.cardBalance,
           availableBalance: isFinite(+s.availableBalance) ? +s.availableBalance : SETTINGS_DEFAULT.availableBalance,
           cashback: isFinite(+s.cashback) ? +s.cashback : SETTINGS_DEFAULT.cashback,
+          remainingStatement: isFinite(+s.remainingStatement) ? +s.remainingStatement : SETTINGS_DEFAULT.remainingStatement,
           version: SETTINGS_DEFAULT.version };
       }
     }catch(e){}
@@ -758,11 +759,16 @@
     if(!raw) return; const n=parseFloat(raw.replace(/[^\d.]/g,'')); if(isFinite(n)){applyFromFraction(Math.max(0,Math.min(1,n/Math.max(1,MAX))),false)}
   });
 
-  const cardBalanceEl=document.getElementById('cardBalance'), availableEl=document.getElementById('availableBalance'),
-        cashbackEl=document.getElementById('cashback'); const fmtUSD=n=>n.toLocaleString(undefined,{style:'currency',currency:'USD'});
+  const cardBalanceEl=document.getElementById('cardBalance'),
+      availableEl=document.getElementById('availableBalance'),
+      cashbackEl=document.getElementById('cashback'),
+      remainingEl=document.getElementById('remainingStmt');
+const fmtUSD=n=>n.toLocaleString(undefined,{style:'currency',currency:'USD'});
   function applyBalances(){
     cardBalanceEl.textContent=fmtUSD(SETTINGS.cardBalance); availableEl.textContent=`${fmtUSD(SETTINGS.availableBalance)} Available`;
     if(cashbackEl) cashbackEl.textContent=fmtUSD(SETTINGS.cashback);
+    if (cashbackEl) cashbackEl.textContent = fmtUSD(SETTINGS.cashback);
+    if (remainingEl) remainingEl.textContent = fmtUSD(SETTINGS.remainingStatement || 0); // NEW
     MAX=Math.max(0,SETTINGS.cardBalance); THRESH=+(MAX*0.82).toFixed(2); lockedAtMax=false; lockedAtMin=false; lastFrac=0;
     minDue = MAX>0 ? Math.min(40, MAX) : 0;
     applyFromFraction(Math.min(1, (minDue||0)/Math.max(1,MAX)), false);
@@ -962,15 +968,50 @@ if (remainingTile) {
     const amt=Number(amount);transactions.push({id:rid(),kind:'refund',merchant,amount:amt,iso,status,card,category,cashback:0});
     saveTransactions();renderTransactions();applyBalanceDelta(-amt,+amt);
   };
-  window.addPayment=({amount,iso,card='AAdvantage Platinum',merchant='Card Payment',status='Posted',category='payment'})=>{
-    const amt=Number(amount);transactions.push({id:rid(),kind:'payment',merchant,amount:amt,iso,status,card,category,cashback:0});
-    saveTransactions();renderTransactions();applyBalanceDelta(-amt,+amt);
-  };
+  window.addPayment = ({amount, iso, card='AAdvantage Platinum', merchant='CARD PAYMENT 7295', status='Posted', category='payment'}) => {
+  const amt = Math.max(0, Number(amount)||0);
+  const prevCard = Number(SETTINGS.cardBalance) || 0;  // capture before applying
+  const MIN_PARTIAL = 40;
+
+  // record the txn
+  transactions.push({
+    id: rid(),
+    kind: 'payment',
+    merchant,
+    amount: amt,
+    iso,
+    status,
+    card,
+    category,
+    cashback: 0
+  });
+  saveTransactions();
+  renderTransactions();
+
+  // normal math: card - amt, available + amt
+  applyBalanceDelta(-amt, +amt);
+
+  // clear or transfer remainder
+  if (prevCard > 0 && amt < prevCard - 0.005) {
+    // partial payment
+    if (amt >= MIN_PARTIAL - 0.005) {
+      const remainder = +(prevCard - amt).toFixed(2);
+      SETTINGS.remainingStatement = remainder;   // move what’s left
+      SETTINGS.cardBalance = 0;                  // new purchases start fresh on the card balance
+    }
+  } else {
+    // paid in full (or over): clear any prior remaining statement
+    SETTINGS.remainingStatement = 0;
+  }
+
+  saveBalances();
+  applyBalances();
+};
   window.addCashbackDeposit=({amount,iso,card='AAdvantage Platinum',status='Posted',account,routing})=>{
     transactions.push({id:rid(),kind:'cashback_deposit',merchant:'Cashback deposited',amount:Number(amount),iso,status,card,category:'payment',cashback:0,cbv:currentCbv(),account,routing,acctLast4:(account||'').slice(-4)});
     saveTransactions();renderTransactions();
   };
-  window.addStatementPayment = ({amount, iso, card='Sapphire Reserve', merchant='STATEMENT PAYMENT 7295', status='Posted', category='payment'}) => {
+  window.addStatementPayment = ({amount, iso, card='AAdvantage Platinum', merchant='STATEMENT PAYMENT 7295', status='Posted', category='payment'}) => {
   const amt = Math.max(0, Number(amount)||0);
 
   // Record the transaction
@@ -1314,6 +1355,7 @@ if (remainingTile) {
 </script>
 </body>
 </html>
+
 
 
 
